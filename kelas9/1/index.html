@@ -1,0 +1,1223 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ulangan Online — IPS Kelas 9 · SMP IT Insan Sejahtera</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #f5f4f0;
+  --surface: #ffffff;
+  --surface2: #f0efe9;
+  --border: #e2e0d8;
+  --border2: #c9c7bc;
+  --text: #1a1916;
+  --text2: #6b6962;
+  --text3: #9e9b94;
+  --blue: #2563eb;
+  --blue-bg: #eff6ff;
+  --blue-border: #bfdbfe;
+  --green: #16a34a;
+  --green-bg: #f0fdf4;
+  --green-border: #bbf7d0;
+  --red: #dc2626;
+  --red-bg: #fef2f2;
+  --red-border: #fecaca;
+  --amber: #d97706;
+  --amber-bg: #fffbeb;
+  --amber-border: #fde68a;
+  --purple: #7c3aed;
+  --purple-bg: #f5f3ff;
+  --purple-border: #ddd6fe;
+  --teal: #0d9488;
+  --teal-bg: #f0fdfa;
+  --teal-border: #99f6e4;
+  --hots: #be185d;
+  --hots-bg: #fdf2f8;
+  --hots-border: #fbcfe8;
+  --slate: #475569;
+  --slate-bg: #f1f5f9;
+  --slate-border: #cbd5e1;
+}
+
+body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+/* ── IDENTITY SCREEN ── */
+#identityScreen {
+  min-height: 100vh;
+  display: flex; align-items: center; justify-content: center;
+  padding: 24px;
+  background: var(--bg);
+  position: relative; overflow: hidden;
+}
+#identityScreen::before {
+  content: ''; position: absolute; top: -120px; right: -120px;
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, #bfdbfe 0%, transparent 70%);
+  pointer-events: none;
+}
+#identityScreen::after {
+  content: ''; position: absolute; bottom: -80px; left: -80px;
+  width: 300px; height: 300px;
+  background: radial-gradient(circle, #bbf7d0 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.identity-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 24px; padding: 48px 40px;
+  width: 100%; max-width: 520px;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.08);
+  position: relative; z-index: 1;
+  animation: slideUp 0.5s cubic-bezier(.4,0,.2,1);
+}
+@keyframes slideUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+
+.school-badge { display: flex; align-items: center; gap: 12px; margin-bottom: 32px; padding-bottom: 24px; border-bottom: 1px solid var(--border); }
+.school-logo { width: 52px; height: 52px; border-radius: 12px; background: var(--blue-bg); border: 1px solid var(--blue-border); display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0; }
+.school-info h1 { font-size: 15px; font-weight: 700; color: var(--text); line-height: 1.3; }
+.school-info p { font-size: 12px; color: var(--text2); margin-top: 2px; }
+
+.form-title { font-size: 26px; font-weight: 800; color: var(--text); line-height: 1.2; margin-bottom: 6px; }
+.form-subtitle { font-size: 13px; color: var(--text2); margin-bottom: 28px; line-height: 1.5; }
+
+.packet-selector { margin-bottom: 22px; }
+.packet-label { display: block; font-size: 12px; font-weight: 700; color: var(--text2); letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 10px; }
+.packet-options { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.packet-opt {
+  border: 2px solid var(--border); border-radius: 12px;
+  padding: 14px 10px; text-align: center; cursor: pointer;
+  background: var(--surface2); transition: all 0.15s;
+  user-select: none;
+}
+.packet-opt:hover { border-color: var(--blue); background: var(--blue-bg); }
+.packet-opt.active { border-color: var(--blue); background: var(--blue-bg); box-shadow: 0 0 0 3px rgba(37,99,235,0.15); }
+.packet-opt .pkt-letter { font-size: 22px; font-weight: 800; color: var(--blue); display: block; line-height: 1; margin-bottom: 4px; }
+.packet-opt .pkt-name { font-size: 11px; font-weight: 600; color: var(--text2); }
+.packet-opt.active .pkt-name { color: var(--blue); }
+
+.form-group { margin-bottom: 18px; }
+.form-label { display: block; font-size: 12px; font-weight: 700; color: var(--text2); letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 6px; }
+.form-input { width: 100%; padding: 12px 16px; border: 1.5px solid var(--border); border-radius: 10px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; color: var(--text); background: var(--surface2); transition: all 0.15s; outline: none; }
+.form-input:focus { border-color: var(--blue); background: var(--surface); box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
+.form-input::placeholder { color: var(--text3); }
+.form-select { width: 100%; padding: 12px 16px; border: 1.5px solid var(--border); border-radius: 10px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; color: var(--text); background: var(--surface2); transition: all 0.15s; outline: none; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b6962' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; cursor: pointer; }
+.form-select:focus { border-color: var(--blue); background-color: var(--surface); box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
+
+.exam-info-box { background: var(--blue-bg); border: 1px solid var(--blue-border); border-radius: 10px; padding: 14px 16px; margin-bottom: 12px; display: flex; gap: 10px; align-items: flex-start; }
+.exam-info-box .icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+.exam-info-box p { font-size: 12px; color: var(--blue); line-height: 1.6; }
+.exam-info-box strong { font-weight: 700; }
+
+.legend-box { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 12px 16px; margin-bottom: 12px; }
+.legend-box p { font-size: 11.5px; color: var(--text2); line-height: 1.8; }
+.legend-box strong { color: var(--text); }
+
+.warn-box { background: var(--red-bg); border: 1px solid var(--red-border); border-radius: 10px; padding: 12px 16px; margin-bottom: 24px; display: flex; gap: 10px; align-items: flex-start; }
+.warn-box p { font-size: 12px; color: var(--red); line-height: 1.6; }
+
+.btn-start { width: 100%; padding: 14px; background: var(--blue); color: #fff; border: none; border-radius: 12px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 15px; font-weight: 700; cursor: pointer; transition: all 0.15s; letter-spacing: 0.2px; }
+.btn-start:hover { background: #1d4ed8; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(37,99,235,0.35); }
+.btn-start:active { transform: translateY(0); }
+.form-error { font-size: 12px; color: var(--red); margin-top: 5px; display: none; }
+
+/* ── INVALID SCREEN ── */
+#invalidScreen { display: none; min-height: 100vh; align-items: center; justify-content: center; padding: 24px; background: var(--bg); }
+.invalid-card { background: var(--surface); border: 1px solid var(--red-border); border-radius: 24px; padding: 56px 40px; max-width: 440px; width: 100%; text-align: center; box-shadow: 0 8px 40px rgba(220,38,38,0.1); animation: slideUp 0.4s ease; }
+.invalid-icon { font-size: 56px; margin-bottom: 16px; }
+.invalid-title { font-size: 22px; font-weight: 800; color: var(--red); margin-bottom: 10px; }
+.invalid-msg { font-size: 13px; color: var(--text2); line-height: 1.7; }
+
+/* ── MODAL OVERLAY ── */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.55); backdrop-filter: blur(4px); z-index: 500; display: none; align-items: center; justify-content: center; }
+.modal-overlay.show { display: flex; }
+.modal-box { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 44px 36px; max-width: 420px; width: 90%; text-align: center; box-shadow: 0 24px 60px rgba(0,0,0,0.2); animation: slideUp .35s ease; max-height: 86vh; overflow-y: auto; }
+.modal-icon { font-size: 48px; margin-bottom: 14px; }
+.modal-title { font-size: 22px; font-weight: 800; margin-bottom: 8px; }
+.modal-title.red { color: var(--red); }
+.modal-title.amber { color: var(--amber); }
+.modal-msg { font-size: 13px; color: var(--text2); margin-bottom: 24px; line-height: 1.6; text-align: left; }
+.modal-msg strong { color: var(--text); font-weight: 700; }
+
+.confirm-stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-bottom: 20px; }
+.cs-box { background: var(--surface2); border-radius: 10px; padding: 12px 8px; }
+.cs-val { font-size: 22px; font-weight: 800; }
+.cs-lbl { font-size: 11px; color: var(--text2); margin-top: 2px; }
+.cs-green { color: var(--green); }
+.cs-red   { color: var(--red); }
+.cs-amber { color: var(--amber); }
+
+.modal-btns { display: flex; gap: 10px; justify-content: center; }
+.btn-modal { padding: 12px 24px; border-radius: 10px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 700; cursor: pointer; transition: all 0.15s; border: none; }
+.btn-modal-primary { background: var(--green); color: #fff; }
+.btn-modal-primary:hover { background: #15803d; }
+.btn-modal-secondary { background: var(--surface2); color: var(--text); border: 1px solid var(--border2); }
+.btn-modal-secondary:hover { background: var(--surface); }
+.btn-modal-danger { background: var(--blue); color: #fff; }
+.btn-modal-danger:hover { background: #1d4ed8; }
+
+/* ── EXAM SCREEN ── */
+#examScreen { display: none; }
+
+.site-header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 24px; position: sticky; top: 0; z-index: 100; }
+.header-inner { max-width: 960px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 56px; gap: 16px; flex-wrap: wrap; }
+.site-logo { display: flex; align-items: center; gap: 10px; }
+.logo-text { font-size: 14px; font-weight: 700; color: var(--text); line-height: 1.2; }
+.logo-sub { font-size: 11px; color: var(--text2); }
+.header-right { display: flex; align-items: center; gap: 12px; flex-shrink: 0; flex-wrap: wrap; }
+
+.fs-btn { width: 32px; height: 32px; border-radius: 999px; border: 1px solid var(--border); background: var(--surface2); color: var(--text2); font-size: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s; flex-shrink: 0; }
+.fs-btn:hover { background: var(--blue-bg); border-color: var(--blue-border); color: var(--blue); }
+
+.packet-badge { display: flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 999px; background: var(--purple-bg); border: 1px solid var(--purple-border); color: var(--purple); letter-spacing: 0.5px; text-transform: uppercase; }
+
+.timer-wrap { display: flex; align-items: center; gap: 6px; background: var(--surface2); border: 1px solid var(--border); border-radius: 999px; padding: 5px 14px; }
+.timer-icon { font-size: 14px; }
+.timer-val { font-family: 'DM Mono', monospace; font-size: 15px; font-weight: 500; color: var(--text); min-width: 48px; text-align: center; transition: color .3s; }
+.timer-val.warn { color: var(--amber); }
+.timer-val.danger { color: var(--red); animation: blink 1s infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.4} }
+
+.student-chip { display: flex; align-items: center; gap: 8px; background: var(--blue-bg); border: 1px solid var(--blue-border); border-radius: 999px; padding: 4px 12px 4px 6px; font-size: 12px; color: var(--blue); font-weight: 600; }
+.student-chip-avatar { width: 24px; height: 24px; background: var(--blue); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 800; }
+
+.header-stats { display: flex; gap: 8px; align-items: center; font-size: 13px; }
+.hstat { display: flex; align-items: center; gap: 4px; }
+.hstat-dot { width: 8px; height: 8px; border-radius: 50%; }
+.hstat-val { font-weight: 600; }
+
+.progress-wrap { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 24px 10px; position: sticky; top: 56px; z-index: 99; }
+.progress-inner { max-width: 960px; margin: 0 auto; }
+.progress-meta { display: flex; justify-content: space-between; font-size: 12px; color: var(--text2); margin-bottom: 6px; margin-top: 8px; }
+.progress-track { height: 6px; background: var(--surface2); border-radius: 999px; overflow: hidden; border: 1px solid var(--border); }
+.progress-fill { height: 100%; background: var(--blue); border-radius: 999px; transition: width 0.4s cubic-bezier(.4,0,.2,1); }
+
+.main { max-width: 960px; margin: 0 auto; padding: 24px 24px 100px; }
+
+.section-header { display: flex; align-items: center; gap: 10px; margin: 32px 0 16px; }
+.section-header:first-child { margin-top: 0; }
+.section-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700; flex-shrink: 0; }
+.section-info h2 { font-size: 16px; font-weight: 700; }
+.section-info p { font-size: 12px; color: var(--text2); margin-top: 1px; }
+
+.subgroup-header { display: flex; align-items: center; gap: 8px; margin: 26px 0 12px; padding-bottom: 8px; border-bottom: 1px dashed var(--border2); }
+.subgroup-badge { font-size: 11px; font-weight: 800; padding: 3px 10px; border-radius: 999px; letter-spacing: 0.5px; text-transform: uppercase; }
+.subgroup-badge.pg   { background: var(--blue-bg); color: var(--blue); border: 1px solid var(--blue-border); }
+.subgroup-badge.pgk  { background: var(--amber-bg); color: var(--amber); border: 1px solid var(--amber-border); }
+.subgroup-badge.kat  { background: var(--teal-bg); color: var(--teal); border: 1px solid var(--teal-border); }
+.subgroup-badge.esai { background: var(--slate-bg); color: var(--slate); border: 1px solid var(--slate-border); }
+.subgroup-desc { font-size: 12px; color: var(--text2); }
+
+.q-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 20px; margin-bottom: 12px; transition: box-shadow 0.15s; }
+.q-card:hover { box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+.q-card.hots-card { border-color: var(--hots-border); }
+.q-card.hots-card:hover { box-shadow: 0 2px 12px rgba(190,24,93,0.08); }
+
+.q-top { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 14px; }
+.q-num { min-width: 28px; height: 28px; background: var(--surface2); border: 1px solid var(--border); border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: var(--text2); flex-shrink: 0; margin-top: 1px; transition: all 0.2s; }
+.q-num.answered-correct { background: var(--green-bg); border-color: var(--green-border); color: var(--green); }
+.q-num.answered-wrong { background: var(--red-bg); border-color: var(--red-border); color: var(--red); }
+.q-num.answered-partial { background: var(--amber-bg); border-color: var(--amber-border); color: var(--amber); }
+.q-num.answered-neutral { background: var(--slate-bg); border-color: var(--slate-border); color: var(--slate); }
+
+.q-text { font-size: 14px; line-height: 1.65; color: var(--text); flex: 1; }
+
+.options { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+@media (max-width: 480px) { .options { grid-template-columns: 1fr; } }
+
+.option { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border: 1px solid var(--border); border-radius: 10px; cursor: pointer; background: var(--surface2); transition: all 0.12s; font-size: 13px; user-select: none; }
+.option:hover { background: var(--blue-bg); border-color: var(--blue-border); }
+.option.selected { background: var(--blue-bg); border-color: var(--blue); }
+.option.correct { background: var(--green-bg); border-color: var(--green); color: var(--green); }
+.option.wrong { background: var(--red-bg); border-color: var(--red); color: var(--red); }
+.option.show-correct { background: var(--green-bg); border-color: var(--green-border); color: var(--green); }
+.option.locked { cursor: default; }
+
+.opt-label { width: 24px; height: 24px; border-radius: 6px; border: 1px solid var(--border2); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; flex-shrink: 0; background: var(--surface); color: var(--text2); transition: all 0.12s; }
+.option.selected .opt-label { background: var(--blue); border-color: var(--blue); color: #fff; }
+.option.correct .opt-label { background: var(--green); border-color: var(--green); color: #fff; }
+.option.wrong .opt-label { background: var(--red); border-color: var(--red); color: #fff; }
+.option.show-correct .opt-label { background: var(--green); border-color: var(--green); color: #fff; }
+
+.opt-text { font-size: 13px; }
+
+/* PGK checkbox style */
+.opt-label.pgk-box { border-radius: 5px; }
+
+.pgk-actions { margin-top: 12px; display: flex; justify-content: flex-end; }
+.btn-jawab { padding: 9px 18px; background: var(--blue); color: #fff; border: none; border-radius: 9px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 12.5px; font-weight: 700; cursor: pointer; transition: all 0.15s; }
+.btn-jawab:hover { background: #1d4ed8; }
+.btn-jawab:disabled { background: var(--border2); cursor: not-allowed; }
+
+/* Kategori (Benar/Salah) table style */
+.kat-statement { border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; margin-bottom: 8px; background: var(--surface2); }
+.kat-statement-text { font-size: 13px; line-height: 1.55; margin-bottom: 10px; }
+.kat-toggle { display: flex; gap: 8px; }
+.kat-btn { flex: 1; text-align: center; padding: 8px 10px; border: 1px solid var(--border2); border-radius: 8px; background: var(--surface); font-size: 12.5px; font-weight: 700; cursor: pointer; color: var(--text2); transition: all 0.12s; }
+.kat-btn:hover { border-color: var(--blue); color: var(--blue); }
+.kat-btn.selected { background: var(--blue-bg); border-color: var(--blue); color: var(--blue); }
+.kat-btn.correct { background: var(--green-bg); border-color: var(--green); color: var(--green); }
+.kat-btn.wrong { background: var(--red-bg); border-color: var(--red); color: var(--red); }
+.kat-btn.show-correct { background: var(--green-bg); border-color: var(--green-border); color: var(--green); }
+.kat-btn.locked { cursor: default; }
+
+/* Esai style */
+.essay-textarea { width: 100%; min-height: 110px; padding: 12px 14px; border: 1.5px solid var(--border); border-radius: 10px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13.5px; color: var(--text); background: var(--surface2); resize: vertical; outline: none; transition: all 0.15s; line-height: 1.6; }
+.essay-textarea:focus { border-color: var(--blue); background: var(--surface); box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
+.essay-note { font-size: 11.5px; color: var(--text2); margin-top: 6px; display: flex; align-items: center; gap: 5px; }
+
+.explanation { margin-top: 12px; padding: 10px 14px; border-radius: 8px; font-size: 13px; line-height: 1.6; display: none; }
+.explanation.show { display: block; }
+.explanation.correct { background: var(--green-bg); border: 1px solid var(--green-border); color: var(--green); }
+.explanation.wrong { background: var(--red-bg); border: 1px solid var(--red-border); color: var(--red); }
+.explanation.partial { background: var(--amber-bg); border: 1px solid var(--amber-border); color: var(--amber); }
+.exp-label { font-weight: 700; margin-right: 4px; }
+
+.topic-tag { display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 999px; margin-bottom: 8px; letter-spacing: 0.5px; text-transform: uppercase; }
+.hots-badge { display: inline-flex; align-items: center; gap: 4px; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 999px; background: var(--hots-bg); border: 1px solid var(--hots-border); color: var(--hots); letter-spacing: 0.5px; text-transform: uppercase; margin-left: 6px; vertical-align: middle; }
+
+/* ── RESULT PANEL ── */
+.result-panel { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 44px 32px; text-align: center; margin-top: 32px; display: none; }
+.result-panel.show { display: block; animation: slideUp 0.5s ease; }
+.result-emoji { font-size: 60px; margin-bottom: 16px; }
+.result-score { font-size: 56px; font-weight: 800; color: var(--text); line-height: 1; margin-bottom: 6px; }
+.result-label { font-size: 14px; color: var(--text2); margin-bottom: 8px; }
+.result-note { font-size: 12px; color: var(--amber); background: var(--amber-bg); border: 1px solid var(--amber-border); border-radius: 10px; padding: 10px 14px; margin: 0 auto 20px; max-width: 460px; line-height: 1.6; }
+.student-result-info { display: inline-flex; align-items: center; gap: 8px; background: var(--surface2); border: 1px solid var(--border); border-radius: 999px; padding: 6px 16px; font-size: 13px; color: var(--text2); margin-bottom: 8px; font-weight: 600; }
+.packet-result-badge { display: inline-flex; align-items: center; gap: 6px; background: var(--purple-bg); border: 1px solid var(--purple-border); border-radius: 999px; padding: 6px 14px; font-size: 12px; color: var(--purple); font-weight: 700; margin-bottom: 8px; }
+.duration-badge { display: inline-flex; align-items: center; gap: 6px; background: var(--amber-bg); border: 1px solid var(--amber-border); border-radius: 999px; padding: 6px 14px; font-size: 12px; color: var(--amber); font-weight: 600; margin-bottom: 24px; }
+.result-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 28px; }
+.r-stat { background: var(--surface2); border-radius: 12px; padding: 16px 12px; }
+.r-stat-val { font-size: 28px; font-weight: 800; }
+.r-stat-lbl { font-size: 12px; color: var(--text2); margin-top: 4px; }
+.green-val { color: var(--green); }
+.red-val { color: var(--red); }
+.blue-val { color: var(--blue); }
+
+.wa-btn { display: inline-flex; align-items: center; gap: 10px; padding: 14px 28px; background: #25d366; color: #fff; border: none; border-radius: 12px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 700; cursor: pointer; text-decoration: none; transition: all 0.15s; margin-bottom: 12px; }
+.wa-btn:hover { background: #1ebe5c; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(37,211,102,0.35); }
+.wa-icon { width: 22px; height: 22px; flex-shrink: 0; }
+
+.btn-secondary { padding: 10px 20px; background: var(--surface2); border: 1px solid var(--border2); border-radius: 10px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; font-weight: 600; cursor: pointer; color: var(--text); transition: all 0.15s; display: inline-block; }
+.btn-secondary:hover { background: var(--surface); box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+
+.result-actions { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.sent-badge { display: inline-flex; align-items: center; gap: 6px; background: var(--green-bg); border: 1px solid var(--green-border); border-radius: 999px; padding: 6px 14px; font-size: 12px; color: var(--green); font-weight: 600; }
+
+/* ── BOTTOM NAV ── */
+.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(255,255,255,0.95); backdrop-filter: blur(8px); border-top: 1px solid var(--border); padding: 12px 24px; z-index: 200; }
+.bottom-nav-inner { max-width: 960px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.nav-info { font-size: 12px; color: var(--text2); }
+.nav-info strong { color: var(--text); }
+.btn-row { display: flex; gap: 10px; align-items: center; }
+.btn { padding: 10px 20px; border-radius: 10px; border: 1px solid var(--border2); background: var(--surface2); font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; font-weight: 600; cursor: pointer; color: var(--text); transition: all 0.15s; }
+.btn:hover { background: var(--surface); box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+.btn-primary { background: var(--blue); color: #fff; border-color: var(--blue); }
+.btn-primary:hover { background: #1d4ed8; box-shadow: 0 4px 12px rgba(37,99,235,0.3); }
+
+/* ── SECTION COLORS ── */
+.s1 .section-icon { background: var(--blue-bg); color: var(--blue); }
+
+.tag-s1 { background: var(--blue-bg); color: var(--blue); }
+.tag-hots { background: var(--hots-bg); color: var(--hots); }
+
+.unanswered-list { background: var(--amber-bg); border: 1px solid var(--amber-border); border-radius: 10px; padding: 10px 14px; margin-bottom: 16px; font-size: 12px; color: var(--amber); text-align: left; line-height: 1.7; }
+.unanswered-list strong { font-weight: 700; }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════ IDENTITY SCREEN -->
+<div id="identityScreen">
+  <div class="identity-card">
+    <div class="school-badge">
+      <div class="school-logo">🇮🇩</div>
+      <div class="school-info">
+        <h1>SMP IT Insan Sejahtera</h1>
+        <p>Mata Pelajaran Ilmu Pengetahuan Sosial (IPS)</p>
+      </div>
+    </div>
+    <h2 class="form-title">Ulangan Harian<br>Ilmu Pengetahuan Sosial</h2>
+    <p class="form-subtitle">Bab 1: Asal-Usul dan Kemajemukan Bangsa Indonesia — ras dan teori kedatangan nenek moyang, gelombang migrasi Austronesia beserta penyebabnya, serta kemajemukan masyarakat Indonesia. Isi identitasmu dan pilih paket soal yang ditentukan gurumu. Pastikan semua data sudah benar sebelum memulai.</p>
+    <div class="exam-info-box">
+      <span class="icon">📋</span>
+      <p><strong>20 soal</strong>: 9 Pilihan Ganda + 4 Pilihan Ganda Kompleks + 4 Soal Berkategori (Benar/Salah) + 3 Esai · <strong>3 Paket Soal</strong> (A / B / C) · Waktu: <strong>40 menit</strong> · Hasil dikirim ke guru via WhatsApp.</p>
+    </div>
+    <div class="legend-box">
+      <p>
+        <strong>Nilai yang tampil di layar</strong> hanya dihitung dari soal Pilihan Ganda, Pilihan Ganda Kompleks, dan Berkategori (Benar/Salah).<br>
+        <strong>Soal Esai</strong> tidak dinilai otomatis — jawabanmu akan dikirim ke guru untuk diperiksa dan dinilai secara manual.
+      </p>
+    </div>
+    <div class="warn-box">
+      <span class="icon">⚠️</span>
+      <p>Jika kamu me-<strong>refresh</strong> atau menutup halaman setelah ujian dimulai, ujianmu akan dinyatakan <strong>TIDAK VALID</strong>.</p>
+    </div>
+    <div class="packet-selector">
+      <span class="packet-label">Pilih Paket Soal</span>
+      <div class="packet-options">
+        <div class="packet-opt" id="pktA" onclick="selectPacket('A')">
+          <span class="pkt-letter">A</span>
+          <span class="pkt-name">Paket A</span>
+        </div>
+        <div class="packet-opt" id="pktB" onclick="selectPacket('B')">
+          <span class="pkt-letter">B</span>
+          <span class="pkt-name">Paket B</span>
+        </div>
+        <div class="packet-opt" id="pktC" onclick="selectPacket('C')">
+          <span class="pkt-letter">C</span>
+          <span class="pkt-name">Paket C</span>
+        </div>
+      </div>
+      <div class="form-error" id="errPaket">Paket soal harus dipilih.</div>
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="inputNama">Nama Lengkap</label>
+      <input type="text" id="inputNama" class="form-input" placeholder="Contoh: Ahmad Fauzan" autocomplete="off">
+      <div class="form-error" id="errNama">Nama tidak boleh kosong.</div>
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="inputKelas">Kelas</label>
+      <select id="inputKelas" class="form-select">
+        <option value="">— Pilih Kelas —</option>
+        <option value="9A">9A</option>
+        <option value="9B">9B</option>
+        <option value="9C">9C</option>
+      </select>
+      <div class="form-error" id="errKelas">Kelas harus dipilih.</div>
+    </div>
+    <button class="btn-start" onclick="startExam()">Mulai Ulangan →</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════ INVALID SCREEN -->
+<div id="invalidScreen">
+  <div class="invalid-card">
+    <div class="invalid-icon">🚫</div>
+    <div class="invalid-title">Ujian Tidak Valid</div>
+    <p class="invalid-msg">Halaman di-refresh atau dibuka ulang setelah ujian dimulai.<br><br>Ujianmu <strong style="color:var(--red)">dinyatakan tidak valid</strong> dan tidak dapat dilanjutkan.<br><br>Hubungi gurumu untuk mendapatkan sesi ujian baru.</p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════ MODAL: WAKTU HABIS -->
+<div class="modal-overlay" id="timeModal">
+  <div class="modal-box">
+    <div class="modal-icon">⏰</div>
+    <div class="modal-title red">Waktu Habis!</div>
+    <p class="modal-msg" style="text-align:center">Waktu 40 menit telah habis. Hasil ulanganmu akan dihitung otomatis dari jawaban yang sudah masuk.</p>
+    <div class="modal-btns">
+      <button class="btn-modal btn-modal-danger" onclick="forceSubmit()">Lihat Hasil Saya →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════ MODAL: KONFIRMASI SUBMIT -->
+<div class="modal-overlay" id="confirmModal">
+  <div class="modal-box">
+    <div class="modal-icon">📋</div>
+    <div class="modal-title amber">Selesaikan Ulangan?</div>
+    <p class="modal-msg">Pastikan semua jawabanmu (termasuk esai) sudah benar sebelum mengakhiri ulangan. <strong>Jawaban tidak bisa diubah setelah selesai.</strong> Nilai baru akan muncul setelah kamu menekan "Ya, Selesaikan".</p>
+    <div class="confirm-stats" style="grid-template-columns:repeat(2,1fr)">
+      <div class="cs-box"><div class="cs-val cs-green" id="csTerjawab">0</div><div class="cs-lbl">📝 Terjawab</div></div>
+      <div class="cs-box"><div class="cs-val cs-amber" id="csSkip">0</div><div class="cs-lbl">— Belum Dijawab</div></div>
+    </div>
+    <div class="unanswered-list" id="unansweredWarning" style="display:none"></div>
+    <div class="modal-btns">
+      <button class="btn-modal btn-modal-secondary" onclick="closeConfirmModal()">Kembali ke Soal</button>
+      <button class="btn-modal btn-modal-primary" onclick="confirmSubmit()">Ya, Selesaikan →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════ EXAM SCREEN -->
+<div id="examScreen">
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="site-logo">
+        <div>
+          <div class="logo-text">SMP IT Insan Sejahtera</div>
+          <div class="logo-sub" id="headerSub">Ulangan IPS — Bab 1: Asal-Usul dan Kemajemukan Bangsa Indonesia</div>
+        </div>
+      </div>
+      <div class="header-right">
+        <div class="packet-badge" id="headerPacket">PAKET —</div>
+        <button class="fs-btn" id="fsBtn" onclick="toggleFullscreen()" title="Mode Layar Penuh">⛶</button>
+        <div class="timer-wrap">
+          <span class="timer-icon">⏱</span>
+          <span class="timer-val" id="timerVal">40:00</span>
+        </div>
+        <div class="header-stats" id="headerStats" style="display:none">
+          <div class="hstat"><div class="hstat-dot" style="background:var(--green)"></div><span class="hstat-val" id="hCorrect">0</span></div>
+          <span style="color:var(--border2)">|</span>
+          <div class="hstat"><div class="hstat-dot" style="background:var(--red)"></div><span class="hstat-val" id="hWrong">0</span></div>
+        </div>
+        <div class="student-chip">
+          <div class="student-chip-avatar" id="avatarInitial">?</div>
+          <span id="chipName">Siswa</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="progress-wrap">
+    <div class="progress-inner">
+      <div class="progress-meta">
+        <span id="progLabel">0 dari 20 soal dijawab</span>
+        <span id="progPct">0%</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" id="progressFill" style="width:0%"></div>
+      </div>
+    </div>
+  </div>
+
+  <main class="main" id="mainContent">
+    <div class="result-panel" id="resultPanel">
+      <div class="result-emoji" id="resultEmoji">🎉</div>
+      <div class="result-score" id="resultScore">0/25</div>
+      <div class="result-label" id="resultLabel">Ulangan selesai!</div>
+      <div class="result-note">📝 Nilai di atas hanya dari PG + PGK + Berkategori. <strong id="essayCountNote">3 jawaban esai</strong> akan diperiksa dan dinilai langsung oleh gurumu.</div>
+      <div class="student-result-info" id="studentResultInfo">👤 Nama · Kelas</div>
+      <div class="packet-result-badge" id="packetResultBadge">📦 Paket —</div>
+      <div class="duration-badge" id="durationBadge">⏱ Durasi: — menit</div>
+      <div class="result-grid">
+        <div class="r-stat"><div class="r-stat-val green-val" id="rCorrect">0</div><div class="r-stat-lbl">✓ Poin Benar</div></div>
+        <div class="r-stat"><div class="r-stat-val red-val" id="rWrong">0</div><div class="r-stat-lbl">✗ Poin Salah</div></div>
+        <div class="r-stat"><div class="r-stat-val blue-val" id="rPct">0%</div><div class="r-stat-lbl">Nilai Sementara</div></div>
+      </div>
+      <div class="result-actions">
+        <a id="waBtn" href="#" class="wa-btn" target="_blank" onclick="markSent()">
+          <svg class="wa-icon" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.108.549 4.084 1.504 5.806L.058 23.5a.5.5 0 0 0 .615.611l5.796-1.517A11.955 11.955 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.885 0-3.65-.52-5.158-1.422l-.369-.222-3.838 1.005 1.023-3.74-.242-.384A9.955 9.955 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+          Kirim Hasil ke Guru via WhatsApp
+        </a>
+        <div id="sentBadge" style="display:none"><span class="sent-badge">✅ Hasil sudah dikirim ke guru!</span></div>
+        <button class="btn-secondary" onclick="location.reload()">Ulangi dari Awal</button>
+      </div>
+    </div>
+  </main>
+
+  <div class="bottom-nav">
+    <div class="bottom-nav-inner">
+      <div class="nav-info">Dijawab: <strong id="navAnswered">0</strong>/20</div>
+      <div class="btn-row">
+        <button class="btn" onclick="scrollToNext()">Soal berikutnya ↓</button>
+        <button class="btn btn-primary" onclick="showConfirmModal()" id="finishBtn" style="display:none">Lihat Hasil &amp; Kirim →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const GURU_WA  = '6282218966476';
+const DURATION = 40 * 60;
+const EXAM_TITLE_JS = 'IPS — Asal-Usul dan Kemajemukan Bangsa Indonesia';
+
+// ══════════════════════════════════════════════════════════════
+// BANK SOAL — akan disisipkan di sini (placeholder diganti skrip build)
+// ══════════════════════════════════════════════════════════════
+const PACKETS = {"A": {"sections": [{"title": "Asal-Usul, Migrasi, dan Kemajemukan Bangsa Indonesia","desc": "Ras dan teori asal-usul nenek moyang, gelombang migrasi Austronesia beserta penyebabnya, serta kemajemukan (keberagaman) masyarakat Indonesia: faktor penyebab, dampak, sikap yang mengancam persatuan, dan nilai pendidikan multikultural","icon": "🌏","cls": "s1","pg": [{"n": 1,"tag": "Ras Melanesoid","hots": false,"text": "Ras yang diperkirakan datang paling awal ke Nusantara, yaitu sekitar 70.000 tahun sebelum Masehi, dengan ciri kulit hitam, rambut keriting, hidung lebar, bibir tebal, dan tinggi badan sekitar 160–170 cm, dikenal sebagai ras...","opts": ["Melanesoid","Negrito","Weddid","Deutero Melayu"],"correct": "A","exp": "Ras Melanesoid datang paling awal ke Nusantara sekitar 70.000 tahun SM, dengan ciri kulit hitam, rambut keriting, hidung lebar, bibir tebal, dan tinggi 160–170 cm. Peralatan yang digunakan masih dari batu dan tulang hewan (zaman batu tua), dan keturunannya kini banyak ditemukan di NTT, Maluku, dan Papua.","type": "pg","tagCls": "tag-s1"},{"n": 2,"tag": "Ras Weddid","hots": false,"text": "Ras yang diperkirakan berasal dari Sri Lanka, memiliki ciri badan tegap tinggi, kulit cokelat, dan rambut ikal/bergelombang, serta keturunannya kini ditemukan di Sulawesi dan Sumatra Selatan (suku Kubu), adalah ras...","opts": ["Negrito","Weddid","Melanesoid","Austromelanesid"],"correct": "B","exp": "Ras Weddid diperkirakan berasal dari Sri Lanka, berciri badan tegap tinggi, kulit cokelat, rambut ikal/bergelombang. Keturunannya kini ada di Sulawesi dan Sumatra Selatan (suku Kubu). Kedatangan ras Weddid membuat ras Negrito semakin tersisih.","type": "pg","tagCls": "tag-s1"},{"n": 3,"tag": "Ras Negrito","hots": false,"text": "Kelompok manusia yang diperkirakan sebagai penghuni tertua Nusantara namun asal dan waktu kedatangannya belum diketahui pasti, berciri badan kecil, kulit hitam, dan rambut keriting, dan lama-kelamaan tersisih oleh kelompok pendatang lain, adalah ras...","opts": ["Weddid","Melanesoid","Negrito","Proto Melayu"],"correct": "C","exp": "Ras Negrito diperkirakan sebagai penghuni Nusantara paling tua, meski asal dan waktu kedatangannya belum diketahui pasti. Berciri badan kecil, kulit hitam, dan rambut keriting, kelompok ini lama-kelamaan tersisih oleh kelompok pendatang lain seperti Weddid.","type": "pg","tagCls": "tag-s1"},{"n": 4,"tag": "Teori Out of Africa","hots": false,"text": "Teori yang menyatakan bahwa manusia modern pertama kali muncul di Afrika sekitar 200.000 tahun lalu, kemudian sebagian menyeberangi laut dan pulau-pulau sekitar 60.000 tahun lalu hingga tiba di Nusantara dan Australia sebagai ras Australomelanesid, dikenal sebagai teori...","opts": ["Out of Taiwan","Out of Yunnan","Out of Africa","Out of Nusantara"],"correct": "C","exp": "Teori Out of Africa menyatakan manusia modern muncul di Afrika sekitar 200.000 tahun lalu, lalu sekitar 60.000 tahun lalu sebagian menyeberang hingga tiba di Nusantara, Australia, dan sekitarnya sebagai ras Australomelanesid (nenek moyang penutur Papua dan Melanesia). Bukti pendukungnya antara lain fosil Homo sapiens tertua di Afrika serta variasi genetik tertinggi manusia modern yang ditemukan di sana.","type": "pg","tagCls": "tag-s1"},{"n": 5,"tag": "Gelombang Migrasi Austronesia (Teori Out of Taiwan)","hots": false,"text": "Menurut teori Out of Taiwan yang didukung Peter Bellwood, leluhur Austronesia berasal dari Fujian/Zhejiang di Tiongkok Selatan, kemudian bermigrasi melalui Taiwan dan Filipina sebelum menyebar ke Nusantara. Urutan jalur migrasi yang tepat menurut teori ini adalah...","opts": ["Fujian/Zhejiang → Taiwan → Filipina → Sulawesi, Kalimantan, Maluku, hingga Madagaskar","Afrika → India → Nusantara bagian timur","Yunnan → Semenanjung Malaka → Sumatra saja","Madagaskar → Taiwan → Fujian/Zhejiang"],"correct": "A","exp": "Menurut teori Out of Taiwan (Peter Bellwood), leluhur Austronesia berasal dari Fujian/Zhejiang, Tiongkok Selatan, bermigrasi ke Taiwan (±7000–5500 SM), lalu ke Filipina (±5000 SM), kemudian menyebar ke Sulawesi, Kalimantan, Maluku, Pasifik, dan ke arah barat hingga Madagaskar.","type": "pg","tagCls": "tag-s1"},{"n": 6,"tag": "Istilah Austronesia","hots": true,"text": "Istilah 'Austronesia' yang kini digunakan untuk menyebut rumpun bahasa dan bangsa yang tersebar dari Madagaskar hingga Pasifik pada dasarnya diusulkan oleh William Schmidt pada tahun 1899 untuk menggantikan istilah lama yang sebelumnya diperkenalkan oleh Hendrik Kern. Istilah lama yang digantikan tersebut adalah...","opts": ["Malayo-Polinesia","Austromelanesid","Formosa","Sundaland"],"correct": "A","exp": "Istilah 'Austronesia' diusulkan oleh William Schmidt (1899) untuk menggantikan istilah lama 'Malayo-Polinesia' yang sebelumnya diperkenalkan oleh Hendrik Kern.","type": "pg","tagCls": "tag-s1"},{"n": 7,"tag": "Faktor Alamiah Pendorong Migrasi","hots": false,"text": "Kekeringan berkepanjangan, letusan gunung berapi, dan berkurangnya daya dukung tanah termasuk alasan alamiah yang bersifat...","opts": ["positif, karena mendukung kemampuan nenek moyang untuk berpindah tempat","negatif, karena mendorong nenek moyang meninggalkan tempat asalnya","antropogenik, karena murni disebabkan oleh konflik antarmanusia","tidak berkaitan sama sekali dengan migrasi nenek moyang"],"correct": "B","exp": "Letusan gunung api, gempa bumi, kekeringan berkepanjangan, dan berkurangnya daya dukung tanah termasuk alasan alamiah yang bersifat negatif, yaitu faktor yang mendorong nenek moyang meninggalkan tempat asalnya untuk mencari wilayah baru yang lebih baik.","type": "pg","tagCls": "tag-s1"},{"n": 8,"tag": "Kemajemukan Masyarakat Indonesia","hots": false,"text": "Istilah untuk menggambarkan kondisi masyarakat yang hidup berdampingan secara fisik namun kehidupan sosialnya terpisah-pisah menurut ras, suku, agama, dan kelompok ekonomi masing-masing, sebagaimana digunakan oleh J.S. Furnivall untuk menggambarkan masyarakat Indonesia pada masa penjajahan Belanda, adalah...","opts": ["masyarakat majemuk","masyarakat homogen","masyarakat tertutup","masyarakat agraris"],"correct": "A","exp": "J.S. Furnivall menggunakan istilah masyarakat majemuk untuk menggambarkan kondisi masyarakat Indonesia pada masa penjajahan Belanda, yaitu hidup berdampingan secara fisik tetapi kehidupan sosialnya terpisah-pisah menurut ras, suku, agama, dan kelompok ekonomi.","type": "pg","tagCls": "tag-s1"},{"n": 9,"tag": "Studi Kasus Keragaman dan Kemajemukan","hots": true,"text": "Wilayah Indonesia terdiri atas ribuan pulau yang terpisah oleh lautan, sehingga sejak zaman dahulu nenek moyang yang mendiami satu pulau berkembang secara terpisah dari nenek moyang di pulau lain dan membentuk suku bangsa yang berbeda-beda. Ilustrasi tersebut paling tepat menunjukkan bahwa kemajemukan masyarakat Indonesia terutama disebabkan oleh faktor...","opts": ["letak geografis","iklim yang berbeda","tingkat pembangunan","kedatangan bangsa asing semata"],"correct": "A","exp": "Letak geografis Indonesia yang terdiri atas ribuan pulau yang dipisahkan lautan menyebabkan nenek moyang hidup terpencar dan berkembang menjadi suku-suku yang berbeda-beda, sehingga menjadi salah satu faktor utama penyebab kemajemukan masyarakat Indonesia.","type": "pg","tagCls": "tag-s1"}],"pgk": [{"n": 10,"tag": "Bukti Teori Out of Taiwan","hots": false,"text": "Menurut hasil penelitian, migrasi Austronesia ke Nusantara (teori Out of Taiwan) didukung oleh beberapa jenis bukti. Manakah yang termasuk bukti pendukung teori tersebut? Pilihlah jawaban yang benar (jawaban lebih dari satu)!","opts": ["Bukti bahasa, yaitu rumpun bahasa Austronesia yang tersebar dari Nusantara hingga Madagaskar berasal dari Taiwan","Bukti arkeologi berupa alat bercocok tanam dan tembikar zaman Neolitikum yang mirip di Taiwan, Filipina, dan Indonesia","Bukti bahwa seluruh penduduk Indonesia memiliki DNA yang identik tanpa ada perbedaan sama sekali","Bukti budaya pelayaran berupa kemampuan membuat perahu bercadik"],"correct": ["A","B","D"],"exp": "Bukti pendukung teori Out of Taiwan meliputi bukti bahasa (rumpun Austronesia dari Taiwan), bukti arkeologi (alat dan tembikar Neolitikum yang mirip), serta bukti budaya pelayaran (perahu bercadik). DNA penduduk Indonesia justru menunjukkan kekerabatan dengan Taiwan, bukan berarti seluruhnya identik tanpa perbedaan.","type": "pgk","tagCls": "tag-s1"},{"n": 11,"tag": "Kemajemukan Horizontal (Usman Pelly)","hots": false,"text": "Menurut Usman Pelly, kemajemukan horizontal dalam masyarakat Indonesia dapat dilihat dari perbedaan berikut. Pilihlah jawaban yang benar (jawaban lebih dari satu)!","opts": ["Perbedaan etnis/suku dan ras","Perbedaan penghasilan atau tingkat ekonomi","Perbedaan bahasa daerah dan adat istiadat","Perbedaan agama, pakaian, makanan, dan budaya"],"correct": ["A","C","D"],"exp": "Kemajemukan horizontal menurut Usman Pelly dilihat dari perbedaan etnis/suku, ras, bahasa daerah, adat istiadat, agama, pakaian, makanan, dan budaya. Perbedaan penghasilan atau tingkat ekonomi termasuk kemajemukan vertikal, bukan horizontal.","type": "pgk","tagCls": "tag-s1"},{"n": 12,"tag": "Dampak Positif Kemajemukan","hots": false,"text": "Manakah pernyataan berikut yang termasuk dampak positif dari kemajemukan masyarakat Indonesia? Pilihlah jawaban yang benar (jawaban lebih dari satu)!","opts": ["Melatih sikap saling menghormati dan toleran terhadap perbedaan","Memicu munculnya diskriminasi antarkelompok masyarakat","Membuat Indonesia dikenal dunia sebagai negara yang kaya budaya","Memungkinkan masyarakat saling mencontoh kebiasaan baik dari suku atau budaya lain"],"correct": ["A","C","D"],"exp": "Dampak positif kemajemukan antara lain melatih sikap saling menghormati dan toleran, membuat Indonesia dikenal dunia sebagai negara kaya budaya, serta memungkinkan masyarakat saling mencontoh kebiasaan baik. Diskriminasi antarkelompok justru merupakan dampak negatif kemajemukan yang tidak dikelola dengan baik.","type": "pgk","tagCls": "tag-s1"},{"n": 13,"tag": "Sikap yang Mengancam Persatuan Bangsa","hots": false,"text": "Manakah sikap berikut yang termasuk sikap-sikap yang dapat mengancam persatuan bangsa akibat kemajemukan masyarakat? Pilihlah jawaban yang benar (jawaban lebih dari satu)!","opts": ["Separatisme, yaitu keinginan memisahkan diri dari NKRI dan mendirikan negara sendiri","Toleransi, yaitu sikap menghargai dan menerima perbedaan agama, suku, dan pendapat orang lain","Sukuisme, yaitu menganggap suku sendiri lebih unggul dan lebih penting daripada suku lain","Etnosentrisme, yaitu merasa budaya sendiri paling benar dan menilai budaya lain dengan standar budaya sendiri"],"correct": ["A","C","D"],"exp": "Separatisme, sukuisme, dan etnosentrisme merupakan sikap-sikap yang dapat mengancam persatuan bangsa. Toleransi justru merupakan nilai yang perlu ditumbuhkan untuk menjaga persatuan, bukan sikap yang mengancamnya.","type": "pgk","tagCls": "tag-s1"}],"kat": [{"n": 14,"tag": "Ras dan Teori Asal-Usul Nenek Moyang","hots": false,"text": "Tentukan Benar atau Salah untuk setiap pernyataan berikut terkait ras dan teori asal-usul nenek moyang bangsa Indonesia.","labels": ["Benar","Salah"],"statements": [{"text": "Ras Melanesoid diperkirakan datang ke Nusantara sekitar 70.000 tahun sebelum Masehi.","correct": "Benar"},{"text": "Ras Weddid tersisih akibat kedatangan ras Negrito ke Nusantara.","correct": "Salah"},{"text": "Teori Out of Africa didukung oleh bukti fosil Homo sapiens tertua yang ditemukan di Afrika.","correct": "Benar"}],"type": "kat","tagCls": "tag-s1"},{"n": 15,"tag": "Gelombang Migrasi dan Penyebabnya","hots": false,"text": "Tentukan Benar atau Salah untuk setiap pernyataan berikut terkait gelombang migrasi nenek moyang bangsa Indonesia dan penyebabnya.","labels": ["Benar","Salah"],"statements": [{"text": "Gelombang migrasi pertama menyusuri garis pantai dari Afrika ke India lalu ke Nusantara sekitar 60.000 tahun lalu.","correct": "Benar"},{"text": "Istilah 'Austronesia' pertama kali diusulkan oleh Peter Bellwood pada tahun 1899.","correct": "Salah"},{"text": "Letusan gunung api dan kekeringan berkepanjangan termasuk alasan alamiah yang mendorong migrasi nenek moyang.","correct": "Benar"}],"type": "kat","tagCls": "tag-s1"},{"n": 16,"tag": "Definisi dan Faktor Penyebab Kemajemukan","hots": false,"text": "Tentukan Benar atau Salah untuk setiap pernyataan berikut terkait definisi dan faktor penyebab kemajemukan masyarakat Indonesia.","labels": ["Benar","Salah"],"statements": [{"text": "Istilah masyarakat majemuk pertama kali digunakan oleh J.S. Furnivall untuk menggambarkan kondisi masyarakat Indonesia pada masa penjajahan Belanda.","correct": "Benar"},{"text": "Perbedaan iklim antarwilayah di Indonesia turut memengaruhi perbedaan mata pencaharian, seperti nelayan di pesisir dan petani di pegunungan.","correct": "Benar"},{"text": "Letak geografis Indonesia yang berupa daratan luas tanpa pemisah laut menjadi penyebab utama kemajemukan masyarakatnya.","correct": "Salah"}],"type": "kat","tagCls": "tag-s1"},{"n": 17,"tag": "Sikap Mengancam Persatuan dan Masalah Sosial","hots": true,"text": "Tentukan Benar atau Salah untuk setiap pernyataan berikut terkait sikap yang mengancam persatuan dan masalah sosial akibat kemajemukan.","labels": ["Benar","Salah"],"statements": [{"text": "Primordialisme adalah sikap yang terlalu mementingkan ikatan suku, agama, atau daerah asal sendiri sampai mencurigai kelompok lain.","correct": "Benar"},{"text": "Disharmonisasi berarti hubungan antarmanusia menjadi semakin rukun dan selaras.","correct": "Salah"},{"text": "Radikalisme dan intoleransi ditandai dengan sikap fanatik, tertutup, dan bahkan dapat memakai kekerasan untuk mencapai tujuan.","correct": "Benar"}],"type": "kat","tagCls": "tag-s1"}],"esai": [{"n": 18,"tag": "Teori Asal-Usul Nenek Moyang","text": "Jelaskan perbedaan pokok antara Teori Out of Africa dan Teori Out of Taiwan mengenai asal-usul nenek moyang bangsa Indonesia, ditinjau dari segi waktu kedatangan dan cara hidupnya!","type": "esai","tagCls": "tag-s1"},{"n": 19,"tag": "Faktor Migrasi Nenek Moyang","text": "Sebutkan dan jelaskan masing-masing dua contoh alasan alamiah yang bersifat negatif dan dua contoh alasan alamiah yang bersifat positif dalam mendorong migrasi nenek moyang bangsa Indonesia!","type": "esai","tagCls": "tag-s1"},{"n": 20,"tag": "Nilai Pendidikan Multikultural","text": "Jelaskan empat nilai penting dalam pendidikan multikultural (simpati, toleransi, empati, dan solidaritas sosial) serta mengapa keempat nilai tersebut penting untuk menjaga persatuan di tengah kemajemukan masyarakat Indonesia!","type": "esai","tagCls": "tag-s1"}]}]},"B": {"sections": [{"title": "Asal-Usul, Migrasi, dan Kemajemukan Bangsa Indonesia","desc": "Ras dan teori asal-usul nenek moyang, gelombang migrasi Austronesia beserta penyebabnya, serta kemajemukan (keberagaman) masyarakat Indonesia: faktor penyebab, dampak, sikap yang mengancam persatuan, dan nilai pendidikan multikultural","icon": "🌏","cls": "s1","pg": [{"n": 1,"tag": "Ras Melanesoid","hots": false,"text": "Kelompok manusia yang diperkirakan sebagai penghuni Nusantara paling tua, meski asal dan waktu kedatangannya belum diketahui pasti, berciri badan kecil, kulit hitam, dan rambut keriting, dikenal sebagai ras...","opts": ["Weddid","Negrito","Melanesoid","Deutero Melayu"],"correct": "B","exp": "Ras Negrito diperkirakan sebagai penghuni Nusantara paling tua, meski asal dan waktu kedatangannya belum diketahui pasti. Berciri badan kecil, kulit hitam, dan rambut keriting, kelompok ini lama-kelamaan tersisih oleh kelompok pendatang lain seperti Weddid.","type": "pg","tagCls": "tag-s1"},{"n": 2,"tag": "Ras Weddid","hots": false,"text": "Ras yang datang ke Nusantara sekitar 70.000 tahun sebelum Masehi dengan ciri kulit hitam, rambut keriting, hidung lebar, bibir tebal, dan tinggi badan 160–170 cm, serta keturunannya kini banyak ditemukan di NTT, Maluku, dan Papua, adalah ras...","opts": ["Negrito","Austronesia","Melanesoid","Weddid"],"correct": "C","exp": "Ras Melanesoid datang paling awal ke Nusantara sekitar 70.000 tahun SM, dengan ciri kulit hitam, rambut keriting, hidung lebar, bibir tebal, dan tinggi 160–170 cm. Peralatan yang digunakan masih dari batu dan tulang hewan (zaman batu tua), dan keturunannya kini banyak ditemukan di NTT, Maluku, dan Papua.","type": "pg","tagCls": "tag-s1"},{"n": 3,"tag": "Ras Negrito","hots": false,"text": "Ras yang diperkirakan berasal dari Sri Lanka dengan ciri badan tegap tinggi, kulit cokelat, dan rambut ikal/bergelombang, yang kedatangannya membuat ras Negrito semakin tersisih, adalah ras...","opts": ["Melanesoid","Negrito","Deutero Melayu","Weddid"],"correct": "D","exp": "Ras Weddid diperkirakan berasal dari Sri Lanka, berciri badan tegap tinggi, kulit cokelat, rambut ikal/bergelombang. Keturunannya kini ada di Sulawesi dan Sumatra Selatan (suku Kubu). Kedatangan ras Weddid membuat ras Negrito semakin tersisih.","type": "pg","tagCls": "tag-s1"},{"n": 4,"tag": "Teori Out of Africa","hots": false,"text": "Menurut teori Out of Africa, manusia modern pertama kali muncul di benua Afrika, kemudian sebagian berimigrasi menyeberangi laut hingga tiba di Nusantara dan Australia sebagai ras Australomelanesid. Salah satu bukti pendukung teori ini adalah...","opts": ["ditemukannya fosil Homo sapiens tertua di benua Afrika","ditemukannya rumpun bahasa Austronesia yang tersebar hingga Madagaskar","ditemukannya kemampuan bercocok tanam padi yang berasal dari Taiwan","ditemukannya perahu bercadik peninggalan bangsa Austronesia"],"correct": "A","exp": "Teori Out of Africa menyatakan manusia modern muncul di Afrika sekitar 200.000 tahun lalu, lalu sekitar 60.000 tahun lalu sebagian menyeberang hingga tiba di Nusantara, Australia, dan sekitarnya sebagai ras Australomelanesid. Bukti pendukungnya antara lain fosil Homo sapiens tertua yang ditemukan di Afrika serta variasi genetik tertinggi manusia modern yang berada di sana.","type": "pg","tagCls": "tag-s1"},{"n": 5,"tag": "Gelombang Migrasi Austronesia (Teori Out of Taiwan)","hots": false,"text": "Peter Bellwood mengemukakan teori bahwa leluhur bangsa Austronesia berasal dari wilayah Fujian/Zhejiang di Tiongkok Selatan. Menurut teori tersebut, jalur migrasi Austronesia menuju Nusantara berlangsung melalui...","opts": ["Taiwan, kemudian Filipina, lalu menyebar ke Sulawesi, Kalimantan, Maluku, hingga Madagaskar","India, kemudian menyusuri garis pantai langsung menuju Papua","Semenanjung Malaka, kemudian langsung menuju Papua tanpa singgah di pulau lain","Australia, kemudian menyebar ke arah utara menuju Taiwan"],"correct": "A","exp": "Menurut teori Out of Taiwan (Peter Bellwood), leluhur Austronesia berasal dari Fujian/Zhejiang, Tiongkok Selatan, bermigrasi ke Taiwan (±7000–5500 SM), lalu ke Filipina (±5000 SM), kemudian menyebar ke Sulawesi, Kalimantan, Maluku, Pasifik, dan ke arah barat hingga Madagaskar.","type": "pg","tagCls": "tag-s1"},{"n": 6,"tag": "Istilah Austronesia","hots": true,"text": "Sebelum istilah 'Austronesia' digunakan seperti sekarang, Hendrik Kern lebih dahulu memperkenalkan istilah lain untuk menyebut rumpun bahasa dan bangsa yang tersebar dari Nusantara hingga Pasifik. Istilah lama tersebut kemudian digantikan oleh William Schmidt pada tahun 1899 dengan istilah 'Austronesia'. Istilah lama yang dimaksud adalah...","opts": ["Malayo-Polinesia","Formosa","Sundaland","Weltanschauung"],"correct": "A","exp": "Istilah 'Austronesia' diusulkan oleh William Schmidt (1899) untuk menggantikan istilah lama 'Malayo-Polinesia' yang sebelumnya diperkenalkan oleh Hendrik Kern.","type": "pg","tagCls": "tag-s1"},{"n": 7,"tag": "Faktor Alamiah Pendorong Migrasi","hots": false,"text": "Kemampuan membuat rakit dan perahu, adanya angin pasat yang membantu navigasi, serta berkembangnya kemampuan astronomi termasuk alasan alamiah yang bersifat...","opts": ["negatif, karena mendorong nenek moyang meninggalkan tempat asalnya","antropogenik, karena semata didorong oleh konflik antarmanusia","positif, karena mendukung kemampuan nenek moyang untuk berpindah tempat","tidak relevan dengan proses migrasi nenek moyang"],"correct": "C","exp": "Aliran sungai, padang rumput terbuka, arus pantai, angin pasat, kemampuan membuat rakit/perahu, serta kemampuan astronomi dan navigasi termasuk alasan alamiah yang bersifat positif, yaitu faktor yang mendukung kemampuan nenek moyang untuk berpindah tempat.","type": "pg","tagCls": "tag-s1"},{"n": 8,"tag": "Kemajemukan Masyarakat Indonesia","hots": false,"text": "J.S. Furnivall menggunakan sebuah istilah untuk menggambarkan kondisi masyarakat Indonesia pada masa penjajahan Belanda, yaitu masyarakat yang hidup berdampingan secara fisik tetapi kehidupan sosialnya terpisah-pisah menurut ras, suku, agama, dan kelompok ekonomi. Istilah tersebut adalah...","opts": ["masyarakat tertutup","masyarakat majemuk","masyarakat feodal","masyarakat agraris"],"correct": "B","exp": "J.S. Furnivall menggunakan istilah masyarakat majemuk untuk menggambarkan kondisi masyarakat Indonesia pada masa penjajahan Belanda, yaitu hidup berdampingan secara fisik tetapi kehidupan sosialnya terpisah-pisah menurut ras, suku, agama, dan kelompok ekonomi.","type": "pg","tagCls": "tag-s1"},{"n": 9,"tag": "Studi Kasus Keragaman dan Kemajemukan","hots": true,"text": "Di daerah pesisir, sebagian besar masyarakat bermata pencaharian sebagai nelayan, sedangkan di daerah pegunungan masyarakat lebih banyak bermata pencaharian sebagai petani. Perbedaan mata pencaharian tersebut paling tepat menggambarkan bahwa kemajemukan masyarakat Indonesia juga dipengaruhi oleh faktor...","opts": ["iklim yang berbeda di setiap daerah","letak geografis berupa ribuan pulau","tingkat pembangunan antardaerah","kedatangan bangsa asing untuk berdagang"],"correct": "A","exp": "Setiap daerah di Indonesia memiliki iklim yang berbeda, dan hal ini memengaruhi cara hidup serta mata pencaharian masyarakat, misalnya masyarakat pesisir menjadi nelayan sedangkan masyarakat pegunungan menjadi petani.","type": "pg","tagCls": "tag-s1"}],"pgk": [{"n": 10,"tag": "Bukti Teori Out of Taiwan","hots": false,"text": "Beberapa jenis bukti mendukung teori Out of Taiwan mengenai migrasi bangsa Austronesia ke Nusantara. Manakah yang termasuk bukti tersebut? Pilihlah jawaban yang benar (jawaban lebih dari satu)!","opts": ["Bukti arkeologi berupa alat bercocok tanam dan tembikar zaman Neolitikum yang mirip di Taiwan, Filipina, dan Indonesia","Bukti bahwa seluruh penduduk Nusantara berasal dari satu suku bangsa yang sama sejak awal","Bukti DNA yang menunjukkan hubungan kekerabatan penduduk Nusantara dengan orang Taiwan","Bukti budaya pelayaran berupa kemampuan membuat perahu bercadik"],"correct": ["A","C","D"],"exp": "Bukti pendukung teori Out of Taiwan meliputi bukti arkeologi (alat dan tembikar Neolitikum yang mirip), bukti DNA (kekerabatan dengan Taiwan), dan bukti budaya pelayaran (perahu bercadik). Bukan berarti seluruh penduduk Nusantara berasal dari satu suku bangsa yang sama, karena Nusantara didatangi beberapa gelombang migrasi berbeda.","type": "pgk","tagCls": "tag-s1"},{"n": 11,"tag": "Kemajemukan Horizontal (Usman Pelly)","hots": false,"text": "Kemajemukan horizontal menurut Usman Pelly ditentukan oleh sejumlah perbedaan berikut. Manakah yang termasuk perbedaan tersebut? Pilihlah jawaban yang benar (jawaban lebih dari satu)!","opts": ["Perbedaan ras dan etnis/suku bangsa","Perbedaan tingkat pendidikan dan kedudukan sosial-politik","Perbedaan agama, pakaian, dan makanan khas daerah","Perbedaan bahasa daerah dan adat istiadat"],"correct": ["A","C","D"],"exp": "Kemajemukan horizontal dilihat dari perbedaan ras, etnis/suku, agama, pakaian, makanan, bahasa daerah, dan adat istiadat. Perbedaan tingkat pendidikan dan kedudukan sosial-politik termasuk kemajemukan vertikal, bukan horizontal.","type": "pgk","tagCls": "tag-s1"},{"n": 12,"tag": "Dampak Positif Kemajemukan","hots": false,"text": "Manakah pernyataan berikut yang termasuk dampak positif kemajemukan masyarakat Indonesia apabila dikelola dengan baik? Pilihlah jawaban yang benar (jawaban lebih dari satu)!","opts": ["Masyarakat semakin toleran dan menghargai perbedaan yang ada","Memunculkan sikap individualis dan egois antarwarga","Indonesia semakin dikenal dunia sebagai negara yang kaya akan budaya","Masyarakat dapat saling mencontoh kebiasaan baik dari suku atau budaya lain"],"correct": ["A","C","D"],"exp": "Dampak positif kemajemukan antara lain masyarakat semakin toleran, Indonesia dikenal dunia sebagai negara kaya budaya, dan masyarakat dapat saling mencontoh kebiasaan baik dari suku/budaya lain. Sikap individualis dan egois justru merupakan dampak negatif kemajemukan.","type": "pgk","tagCls": "tag-s1"},{"n": 13,"tag": "Sikap yang Mengancam Persatuan Bangsa","hots": false,"text": "Manakah pernyataan berikut yang tepat mengenai sikap-sikap yang dapat mengancam persatuan bangsa? Pilihlah jawaban yang benar (jawaban lebih dari satu)!","opts": ["Radikalisme ditandai dengan sikap fanatik, tertutup, bahkan dapat memakai kekerasan untuk mencapai tujuan","Primordialisme berarti terlalu mementingkan ikatan suku, agama, atau daerah asal sendiri sampai mencurigai kelompok lain","Empati berarti merasa budaya atau kelompok sendiri paling unggul dibandingkan kelompok lain","Etnosentrisme berarti merasa budaya sendiri paling benar dan menilai budaya lain dengan standar budaya sendiri"],"correct": ["A","B","D"],"exp": "Radikalisme, primordialisme, dan etnosentrisme merupakan sikap yang mengancam persatuan bangsa. Empati sebenarnya berarti mampu merasakan dan memahami perasaan orang lain, bukan merasa kelompok sendiri paling unggul.","type": "pgk","tagCls": "tag-s1"}],"kat": [{"n": 14,"tag": "Ras dan Teori Asal-Usul Nenek Moyang","hots": false,"text": "Tentukan Benar atau Salah untuk setiap pernyataan berikut terkait ras dan teori asal-usul nenek moyang bangsa Indonesia.","labels": ["Benar","Salah"],"statements": [{"text": "Ras Negrito diperkirakan sebagai penghuni Nusantara paling tua meskipun asal dan waktu kedatangannya belum diketahui pasti.","correct": "Benar"},{"text": "Ras Melanesoid menggunakan peralatan dari logam pada masa kedatangannya ke Nusantara.","correct": "Salah"},{"text": "Ras Weddid diperkirakan berasal dari Sri Lanka dan keturunannya kini ada di Sulawesi dan Sumatra Selatan.","correct": "Benar"}],"type": "kat","tagCls": "tag-s1"},{"n": 15,"tag": "Gelombang Migrasi dan Penyebabnya","hots": false,"text": "Tentukan Benar atau Salah untuk setiap pernyataan berikut terkait gelombang migrasi nenek moyang bangsa Indonesia dan penyebabnya.","labels": ["Benar","Salah"],"statements": [{"text": "Gelombang migrasi Austronesia merupakan gelombang migrasi besar yang paling banyak mengubah struktur populasi di Asia Tenggara.","correct": "Benar"},{"text": "Menurut teori Out of Taiwan, leluhur Austronesia berasal dari Filipina, bukan dari Tiongkok Selatan.","correct": "Salah"},{"text": "Keinginan untuk mengembara dan menjelajah termasuk alasan antropogenik yang mendorong migrasi nenek moyang.","correct": "Benar"}],"type": "kat","tagCls": "tag-s1"},{"n": 16,"tag": "Definisi dan Faktor Penyebab Kemajemukan","hots": false,"text": "Tentukan Benar atau Salah untuk setiap pernyataan berikut terkait definisi dan faktor penyebab kemajemukan masyarakat Indonesia.","labels": ["Benar","Salah"],"statements": [{"text": "Menurut Usman Pelly, kemajemukan horizontal dilihat dari perbedaan etnis, suku, ras, bahasa daerah, dan agama.","correct": "Benar"},{"text": "Posisi Indonesia yang strategis di antara Samudra Hindia dan Pasifik menyebabkan tidak ada bangsa asing yang datang membawa budaya baru.","correct": "Salah"},{"text": "Kemajuan pembangunan yang berbeda di setiap daerah dapat menciptakan perbedaan kelas sosial berdasarkan tingkat ekonomi masyarakat.","correct": "Benar"}],"type": "kat","tagCls": "tag-s1"},{"n": 17,"tag": "Sikap Mengancam Persatuan dan Masalah Sosial","hots": true,"text": "Tentukan Benar atau Salah untuk setiap pernyataan berikut terkait sikap yang mengancam persatuan dan masalah sosial akibat kemajemukan.","labels": ["Benar","Salah"],"statements": [{"text": "Sukuisme berarti menganggap suku sendiri lebih unggul dan lebih penting daripada suku lain.","correct": "Benar"},{"text": "Eksklusivisme dan rasialisme adalah sikap yang menganggap kelompok atau ras sendiri lebih rendah dibandingkan kelompok lain.","correct": "Salah"},{"text": "Perilaku diskriminatif dapat memunculkan kesenjangan sosial, ekonomi, atau politik dalam masyarakat.","correct": "Benar"}],"type": "kat","tagCls": "tag-s1"}],"esai": [{"n": 18,"tag": "Teori Asal-Usul Nenek Moyang","text": "Jelaskan mengapa teori Out of Taiwan dianggap sebagai teori yang paling kuat didukung bukti dibandingkan teori-teori lain mengenai asal-usul bangsa Austronesia di Nusantara!","type": "esai","tagCls": "tag-s1"},{"n": 19,"tag": "Faktor Migrasi Nenek Moyang","text": "Jelaskan perbedaan antara alasan alamiah dan alasan antropogenik sebagai penyebab migrasi nenek moyang bangsa Indonesia, masing-masing disertai satu contoh!","type": "esai","tagCls": "tag-s1"},{"n": 20,"tag": "Nilai Pendidikan Multikultural","text": "Jelaskan makna nilai toleransi dan solidaritas sosial dalam pendidikan multikultural, serta berikan masing-masing satu contoh penerapannya dalam kehidupan sehari-hari untuk menjaga persatuan!","type": "esai","tagCls": "tag-s1"}]}]},"C": {"sections": [{"title": "Asal-Usul, Migrasi, dan Kemajemukan Bangsa Indonesia","desc": "Ras dan teori asal-usul nenek moyang, gelombang migrasi Austronesia beserta penyebabnya, serta kemajemukan (keberagaman) masyarakat Indonesia: faktor penyebab, dampak, sikap yang mengancam persatuan, dan nilai pendidikan multikultural","icon": "🌏","cls": "s1","pg": [{"n": 1,"tag": "Ras Melanesoid","hots": false,"text": "Manakah ciri yang paling tepat menggambarkan ras Melanesoid, kelompok yang diperkirakan datang ke Nusantara sekitar 70.000 tahun sebelum Masehi?","opts": ["Badan kecil, kulit hitam, rambut keriting, asal-usul belum diketahui pasti","Kulit hitam, rambut keriting, hidung lebar, bibir tebal, tinggi 160–170 cm","Badan tegap tinggi, kulit cokelat, rambut ikal, berasal dari Sri Lanka","Kulit kuning langsat, rambut lurus, pandai bercocok tanam padi"],"correct": "B","exp": "Ras Melanesoid datang paling awal ke Nusantara sekitar 70.000 tahun SM, dengan ciri kulit hitam, rambut keriting, hidung lebar, bibir tebal, dan tinggi 160–170 cm. Keturunannya kini banyak ditemukan di NTT, Maluku, dan Papua.","type": "pg","tagCls": "tag-s1"},{"n": 2,"tag": "Ras Weddid","hots": false,"text": "Manakah pernyataan yang tepat mengenai ras Weddid, salah satu kelompok ras nenek moyang bangsa Indonesia?","opts": ["Diperkirakan sebagai penghuni Nusantara paling tua namun asal-usulnya belum pasti","Berasal dari Afrika dan menyeberang laut sekitar 60.000 tahun lalu","Diperkirakan berasal dari Sri Lanka, berciri badan tegap tinggi dan kulit cokelat","Berasal dari Taiwan dan pandai bercocok tanam padi"],"correct": "C","exp": "Ras Weddid diperkirakan berasal dari Sri Lanka, berciri badan tegap tinggi, kulit cokelat, rambut ikal/bergelombang. Keturunannya kini ada di Sulawesi dan Sumatra Selatan (suku Kubu).","type": "pg","tagCls": "tag-s1"},{"n": 3,"tag": "Ras Negrito","hots": false,"text": "Ras yang keberadaannya lama-kelamaan semakin tersisih akibat kedatangan ras Weddid ke Nusantara adalah ras...","opts": ["Melanesoid","Negrito","Deutero Melayu","Proto Melayu"],"correct": "B","exp": "Ras Negrito diperkirakan sebagai penghuni Nusantara paling tua. Kedatangan ras Weddid ke Nusantara membuat ras Negrito semakin tersisih dan lama-kelamaan jumlahnya semakin sedikit.","type": "pg","tagCls": "tag-s1"},{"n": 4,"tag": "Teori Out of Africa","hots": false,"text": "Bukti genetik yang menunjukkan variasi genetik tertinggi manusia modern di seluruh dunia berada di benua Afrika mendukung teori...","opts": ["Out of Taiwan","Out of Yunnan","Out of Africa","Out of Sundaland"],"correct": "C","exp": "Variasi genetik tertinggi manusia modern di seluruh dunia yang berada di Afrika menandakan populasi di sana paling tua dan menjadi akar dari seluruh manusia, sehingga menjadi salah satu bukti pendukung teori Out of Africa.","type": "pg","tagCls": "tag-s1"},{"n": 5,"tag": "Gelombang Migrasi Austronesia (Teori Out of Taiwan)","hots": false,"text": "Bangsa Austronesia yang bermigrasi dari Taiwan menuju Nusantara, menurut isi materi, dianggap berbeda dari kelompok pendatang sebelumnya karena mereka...","opts": ["masih hidup berburu dan meramu tanpa tempat tinggal tetap","sudah pandai bercocok tanam, membuat rumah, dan memelihara hewan sehingga hidupnya lebih menetap","tidak meninggalkan bukti peninggalan arkeologi maupun bahasa","hanya menetap sementara di Taiwan tanpa melanjutkan perjalanan ke Nusantara"],"correct": "B","exp": "Berbeda dengan kelompok pendatang sebelumnya yang masih berburu-meramu, bangsa Austronesia sudah pandai bercocok tanam (terutama padi), membuat rumah, dan memelihara hewan, sehingga hidupnya sudah lebih menetap.","type": "pg","tagCls": "tag-s1"},{"n": 6,"tag": "Istilah Austronesia","hots": true,"text": "Istilah 'Malayo-Polinesia' yang diperkenalkan oleh Hendrik Kern akhirnya digantikan oleh istilah 'Austronesia' yang diusulkan oleh seorang ahli pada tahun 1899. Ahli yang dimaksud adalah...","opts": ["Peter Bellwood","William Schmidt","J.S. Furnivall","Usman Pelly"],"correct": "B","exp": "Istilah 'Austronesia' diusulkan oleh William Schmidt pada tahun 1899 untuk menggantikan istilah lama 'Malayo-Polinesia' yang sebelumnya diperkenalkan oleh Hendrik Kern.","type": "pg","tagCls": "tag-s1"},{"n": 7,"tag": "Faktor Alamiah Pendorong Migrasi","hots": false,"text": "Berkurangnya daya dukung tanah dan sumber air serta sempitnya lahan bercocok tanam merupakan contoh alasan alamiah yang bersifat...","opts": ["positif","antropogenik","negatif","tidak berkaitan dengan migrasi"],"correct": "C","exp": "Berkurangnya daya dukung tanah dan sumber air serta sempitnya lahan bercocok tanam termasuk alasan alamiah yang bersifat negatif, yaitu kondisi yang mendorong nenek moyang meninggalkan tempat asalnya.","type": "pg","tagCls": "tag-s1"},{"n": 8,"tag": "Kemajemukan Masyarakat Indonesia","hots": false,"text": "Kemajemukan masyarakat Indonesia dapat dipahami sebagai masyarakat yang memiliki banyak perbedaan suku, agama, budaya, dan kepentingan, namun tetap bersatu menuju satu tujuan bersama, yaitu...","opts": ["hidup sejahtera","menguasai wilayah lain","menyeragamkan seluruh budaya","memisahkan diri dari NKRI"],"correct": "A","exp": "Masyarakat majemuk adalah masyarakat yang memiliki banyak perbedaan, tetapi tetap bersatu menuju satu tujuan bersama, yaitu hidup sejahtera.","type": "pg","tagCls": "tag-s1"},{"n": 9,"tag": "Studi Kasus Keragaman dan Kemajemukan","hots": true,"text": "Posisi Indonesia yang strategis di antara Samudra Hindia dan Samudra Pasifik menyebabkan banyak bangsa asing datang untuk berdagang sekaligus membawa budaya dan agama baru. Hal ini menunjukkan bahwa kemajemukan masyarakat Indonesia juga dipengaruhi oleh faktor...","opts": ["iklim","letak geografis","tingkat pembangunan","jumlah penduduk"],"correct": "B","exp": "Posisi Indonesia yang strategis di antara Samudra Hindia dan Pasifik membuat banyak bangsa asing datang berdagang sekaligus membawa budaya dan agama baru, sehingga letak geografis menjadi salah satu faktor penyebab kemajemukan masyarakat Indonesia.","type": "pg","tagCls": "tag-s1"}],"pgk": [{"n": 10,"tag": "Bukti Teori Out of Taiwan","hots": false,"text": "Manakah pernyataan berikut yang merupakan bukti pendukung teori Out of Taiwan mengenai migrasi bangsa Austronesia? Pilihlah jawaban yang benar (jawaban lebih dari satu)!","opts": ["Rumpun bahasa Austronesia yang tersebar dari Nusantara hingga Madagaskar berasal dari Taiwan (Formosa)","Ditemukannya lukisan dinding gua yang menggambarkan kehidupan bercocok tanam","Seluruh bangsa di dunia ternyata berasal dari satu bahasa yang sama sejak awal","Kemampuan membuat perahu bercadik sebagai bukti budaya pelayaran"],"correct": ["A","B","D"],"exp": "Bukti pendukung teori Out of Taiwan meliputi bukti bahasa (rumpun Austronesia dari Taiwan), bukti budaya berupa lukisan gua yang menggambarkan kehidupan bercocok tanam, dan bukti budaya pelayaran (perahu bercadik). Tidak benar bahwa seluruh bangsa di dunia berasal dari satu bahasa yang sama sejak awal.","type": "pgk","tagCls": "tag-s1"},{"n": 11,"tag": "Kemajemukan Horizontal (Usman Pelly)","hots": false,"text": "Manakah pernyataan berikut yang termasuk kemajemukan horizontal dalam masyarakat Indonesia menurut Usman Pelly? Pilihlah jawaban yang benar (jawaban lebih dari satu)!","opts": ["Perbedaan suku bangsa dan bahasa daerah","Perbedaan penghasilan dan tempat tinggal","Perbedaan adat istiadat, pakaian, dan makanan khas","Perbedaan agama dan kepercayaan yang dianut"],"correct": ["A","C","D"],"exp": "Kemajemukan horizontal dilihat dari perbedaan suku bangsa, bahasa daerah, adat istiadat, pakaian, makanan, dan agama. Perbedaan penghasilan dan tempat tinggal termasuk kemajemukan vertikal, bukan horizontal.","type": "pgk","tagCls": "tag-s1"},{"n": 12,"tag": "Dampak Positif Kemajemukan","hots": false,"text": "Manakah pernyataan berikut yang merupakan dampak positif dari kemajemukan masyarakat Indonesia? Pilihlah jawaban yang benar (jawaban lebih dari satu)!","opts": ["Melatih masyarakat untuk saling menghormati satu sama lain","Memicu persaingan yang tidak sehat antarkelompok masyarakat","Memperkuat rasa persatuan di tengah keberagaman","Membuat Indonesia dikenal dunia sebagai negara yang kaya budaya"],"correct": ["A","C","D"],"exp": "Melatih sikap saling menghormati, memperkuat rasa persatuan, dan membuat Indonesia dikenal dunia sebagai negara kaya budaya merupakan dampak positif kemajemukan. Persaingan yang tidak sehat antarkelompok justru merupakan dampak negatif kemajemukan.","type": "pgk","tagCls": "tag-s1"},{"n": 13,"tag": "Sikap yang Mengancam Persatuan Bangsa","hots": false,"text": "Manakah sikap berikut yang termasuk sikap-sikap yang dapat mengancam persatuan bangsa? Pilihlah jawaban yang benar (jawaban lebih dari satu)!","opts": ["Separatisme, yaitu keinginan untuk memisahkan diri dari NKRI dan mendirikan negara sendiri","Solidaritas sosial, yaitu rasa percaya dan setia kawan terhadap sesama anggota masyarakat","Primordialisme, yaitu terlalu mementingkan ikatan suku atau daerah asal sendiri sampai mencurigai kelompok lain","Sukuisme, yaitu menganggap suku sendiri lebih unggul dan lebih penting daripada suku lain"],"correct": ["A","C","D"],"exp": "Separatisme, primordialisme, dan sukuisme merupakan sikap yang dapat mengancam persatuan bangsa. Solidaritas sosial justru merupakan nilai yang perlu ditumbuhkan untuk menjaga persatuan, bukan sikap yang mengancamnya.","type": "pgk","tagCls": "tag-s1"}],"kat": [{"n": 14,"tag": "Ras dan Teori Asal-Usul Nenek Moyang","hots": false,"text": "Tentukan Benar atau Salah untuk setiap pernyataan berikut terkait ras dan teori asal-usul nenek moyang bangsa Indonesia.","labels": ["Benar","Salah"],"statements": [{"text": "Ras Weddid diperkirakan berasal dari Sri Lanka dan keturunannya kini ditemukan di Sulawesi serta Sumatra Selatan.","correct": "Benar"},{"text": "Ras Melanesoid menggunakan peralatan dari batu dan tulang hewan pada zaman batu tua.","correct": "Benar"},{"text": "Ras Negrito diketahui secara pasti berasal dari wilayah Tiongkok Selatan.","correct": "Salah"}],"type": "kat","tagCls": "tag-s1"},{"n": 15,"tag": "Gelombang Migrasi dan Penyebabnya","hots": false,"text": "Tentukan Benar atau Salah untuk setiap pernyataan berikut terkait gelombang migrasi nenek moyang bangsa Indonesia dan penyebabnya.","labels": ["Benar","Salah"],"statements": [{"text": "Teori Out of Taiwan menyatakan bahwa leluhur Austronesia bermigrasi dari Fujian/Zhejiang ke Taiwan sekitar 7000–5500 SM.","correct": "Benar"},{"text": "Gelombang migrasi pertama ke Nusantara dikenal sebagai penutur Papua atau Melanesia.","correct": "Benar"},{"text": "Konflik sebagai pendorong untuk mencari wilayah baru termasuk alasan alamiah, bukan antropogenik.","correct": "Salah"}],"type": "kat","tagCls": "tag-s1"},{"n": 16,"tag": "Definisi dan Faktor Penyebab Kemajemukan","hots": false,"text": "Tentukan Benar atau Salah untuk setiap pernyataan berikut terkait definisi dan faktor penyebab kemajemukan masyarakat Indonesia.","labels": ["Benar","Salah"],"statements": [{"text": "Kemajemukan masyarakat memiliki dua jenis menurut Usman Pelly, yaitu horizontal dan vertikal.","correct": "Benar"},{"text": "Indonesia diperkirakan memiliki lebih dari 1.200 suku bangsa dan sekitar 718 bahasa daerah.","correct": "Benar"},{"text": "Kemajemukan masyarakat Indonesia sama sekali tidak dipengaruhi oleh kondisi geografis maupun iklim.","correct": "Salah"}],"type": "kat","tagCls": "tag-s1"},{"n": 17,"tag": "Sikap Mengancam Persatuan dan Masalah Sosial","hots": true,"text": "Tentukan Benar atau Salah untuk setiap pernyataan berikut terkait sikap yang mengancam persatuan dan masalah sosial akibat kemajemukan.","labels": ["Benar","Salah"],"statements": [{"text": "Radikalisme dan intoleransi ditandai dengan sikap tidak mau menerima pendapat orang lain serta bersikap fanatik dan tertutup.","correct": "Benar"},{"text": "Separatisme berarti keinginan untuk memperkuat persatuan dan kesatuan NKRI.","correct": "Salah"},{"text": "Etnosentrisme berarti merasa budaya sendiri paling benar dan menilai budaya lain dengan standar budaya sendiri.","correct": "Benar"}],"type": "kat","tagCls": "tag-s1"}],"esai": [{"n": 18,"tag": "Teori Asal-Usul Nenek Moyang","text": "Menurut teori Out of Africa dan teori Out of Taiwan, jelaskan bagaimana nenek moyang bangsa Indonesia diperkirakan sampai ke Nusantara, serta sebutkan satu bukti pendukung untuk masing-masing teori tersebut!","type": "esai","tagCls": "tag-s1"},{"n": 19,"tag": "Faktor Migrasi Nenek Moyang","text": "Jelaskan tiga contoh alasan yang mendorong nenek moyang bangsa Indonesia bermigrasi ke Nusantara, mencakup baik alasan alamiah maupun alasan antropogenik!","type": "esai","tagCls": "tag-s1"},{"n": 20,"tag": "Nilai Pendidikan Multikultural","text": "Jelaskan empat nilai penting dalam pendidikan multikultural (simpati, toleransi, empati, dan solidaritas sosial), lalu berikan satu contoh penerapan salah satu nilai tersebut dalam kehidupanmu sehari-hari!","type": "esai","tagCls": "tag-s1"}]}]}};
+
+// ══════════════════════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════════════════════
+// state.map menyimpan status jawaban tiap soal (per nomor n):
+//   pg   -> { type:'pg', opt:'A' }
+//   pgk  -> { type:'pgk', opts:['A','C'] }
+//   kat  -> { type:'kat', answers:{0:'Benar',1:'Salah',...} }  (indeks pernyataan)
+//   esai -> { type:'esai', text:'...' }  (tidak memengaruhi skor)
+const state = { pointsEarned:0, pointsWrong:0, totalPoints:0, answeredQ:0, totalQ:0, map:{} };
+let studentName='', studentKelas='', selectedPacket='';
+let startTime=null, timerInterval=null, secondsLeft=DURATION;
+let examDone=false;
+let currentPacketData=null;
+
+const SS_STARTED = 'ips9_bab1_started';
+const SS_DONE    = 'ips9_bab1_done';
+
+window.addEventListener('load', () => {
+  if (sessionStorage.getItem(SS_STARTED)==='1' && sessionStorage.getItem(SS_DONE)!=='1') {
+    document.getElementById('identityScreen').style.display = 'none';
+    document.getElementById('invalidScreen').style.display  = 'flex';
+  }
+});
+
+window.addEventListener('beforeunload', e => {
+  if (startTime && !examDone) { e.preventDefault(); e.returnValue=''; }
+});
+
+function selectPacket(p) {
+  selectedPacket = p;
+  ['A','B','C'].forEach(x => {
+    document.getElementById('pkt'+x).classList.toggle('active', x===p);
+  });
+}
+
+function startExam() {
+  const nama  = document.getElementById('inputNama').value.trim();
+  const kelas = document.getElementById('inputKelas').value;
+  let valid = true;
+
+  if (!selectedPacket) { document.getElementById('errPaket').style.display='block'; valid=false; }
+  else                   document.getElementById('errPaket').style.display='none';
+  if (!nama)  { document.getElementById('errNama').style.display='block'; valid=false; }
+  else          document.getElementById('errNama').style.display='none';
+  if (!kelas) { document.getElementById('errKelas').style.display='block'; valid=false; }
+  else          document.getElementById('errKelas').style.display='none';
+  if (!valid) return;
+
+  studentName  = nama;
+  studentKelas = kelas;
+  startTime    = new Date();
+  currentPacketData = PACKETS[selectedPacket];
+
+  sessionStorage.setItem(SS_STARTED, '1');
+  sessionStorage.removeItem(SS_DONE);
+
+  document.getElementById('chipName').textContent        = nama.split(' ')[0] + ' · ' + kelas;
+  document.getElementById('avatarInitial').textContent   = nama.charAt(0).toUpperCase();
+  document.getElementById('headerPacket').textContent    = 'PAKET ' + selectedPacket;
+  document.getElementById('headerSub').textContent       = EXAM_TITLE_JS + ' · Paket ' + selectedPacket;
+
+  renderQuestions();
+
+  document.getElementById('identityScreen').style.display = 'none';
+  document.getElementById('examScreen').style.display     = 'block';
+  window.scrollTo(0,0);
+  enterFullscreen();
+  startTimer();
+}
+
+// ──────────────────────────────────────────────────────────────
+// FULLSCREEN (tampilan penuh browser, sembunyikan bar tab/alamat)
+// ──────────────────────────────────────────────────────────────
+function enterFullscreen() {
+  const el  = document.documentElement;
+  const req = el.requestFullscreen || el.webkitRequestFullscreen || el.msRequestFullscreen;
+  if (req) { try { req.call(el); } catch(e) {} }
+}
+
+function toggleFullscreen() {
+  const isFs = !!(document.fullscreenElement || document.webkitFullscreenElement);
+  if (isFs) {
+    if (document.exitFullscreen)        document.exitFullscreen();
+    else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+  } else {
+    enterFullscreen();
+  }
+}
+
+function updateFsBtn() {
+  const btn = document.getElementById('fsBtn');
+  if (!btn) return;
+  const isFs = !!(document.fullscreenElement || document.webkitFullscreenElement);
+  btn.textContent = isFs ? '⤢' : '⛶';
+  btn.title = isFs ? 'Keluar Layar Penuh' : 'Masuk Layar Penuh';
+}
+document.addEventListener('fullscreenchange', updateFsBtn);
+document.addEventListener('webkitfullscreenchange', updateFsBtn);
+
+// ──────────────────────────────────────────────────────────────
+// RENDER
+// ──────────────────────────────────────────────────────────────
+function computeTotalPoints(sec) {
+  let t = sec.pg.length + sec.pgk.length;
+  sec.kat.forEach(q => t += q.statements.length);
+  return t;
+}
+function computeTotalQuestions(sec) {
+  return sec.pg.length + sec.pgk.length + sec.kat.length + sec.esai.length;
+}
+
+function renderQuestions() {
+  const main   = document.getElementById('mainContent');
+  const result = document.getElementById('resultPanel');
+  main.innerHTML = '';
+  main.appendChild(result);
+
+  const pk = currentPacketData;
+  state.totalPoints = 0;
+  state.totalQ = 0;
+
+  pk.sections.forEach(sec => {
+    state.totalPoints += computeTotalPoints(sec);
+    state.totalQ += computeTotalQuestions(sec);
+
+    const sh = document.createElement('div');
+    sh.className = 'section-header ' + sec.cls;
+    sh.innerHTML = `<div class="section-icon">${sec.icon}</div><div class="section-info"><h2>${sec.title}</h2><p>${sec.desc}</p></div>`;
+    main.insertBefore(sh, result);
+
+    // ── Bagian A: Pilihan Ganda ──
+    if (sec.pg.length) {
+      const gh = document.createElement('div');
+      gh.className = 'subgroup-header';
+      gh.innerHTML = `<span class="subgroup-badge pg">Bagian A · PG</span><span class="subgroup-desc">Pilihlah satu jawaban yang paling tepat.</span>`;
+      main.insertBefore(gh, result);
+      sec.pg.forEach(q => main.insertBefore(renderPG(q), result));
+    }
+
+    // ── Bagian B: Pilihan Ganda Kompleks ──
+    if (sec.pgk.length) {
+      const gh = document.createElement('div');
+      gh.className = 'subgroup-header';
+      gh.innerHTML = `<span class="subgroup-badge pgk">Bagian B · PGK</span><span class="subgroup-desc">Pilihlah jawaban yang benar, boleh lebih dari satu, lalu klik "Jawab".</span>`;
+      main.insertBefore(gh, result);
+      sec.pgk.forEach(q => main.insertBefore(renderPGK(q), result));
+    }
+
+    // ── Bagian C: Soal Berkategori ──
+    if (sec.kat.length) {
+      const gh = document.createElement('div');
+      gh.className = 'subgroup-header';
+      gh.innerHTML = `<span class="subgroup-badge kat">Bagian C · Berkategori</span><span class="subgroup-desc">Tentukan kategori yang tepat untuk setiap pernyataan.</span>`;
+      main.insertBefore(gh, result);
+      sec.kat.forEach(q => main.insertBefore(renderKat(q), result));
+    }
+
+    // ── Bagian D: Esai ──
+    if (sec.esai.length) {
+      const gh = document.createElement('div');
+      gh.className = 'subgroup-header';
+      gh.innerHTML = `<span class="subgroup-badge esai">Bagian D · Esai</span><span class="subgroup-desc">Jawablah dengan kalimatmu sendiri. Bagian ini diperiksa langsung oleh guru.</span>`;
+      main.insertBefore(gh, result);
+      sec.esai.forEach(q => main.insertBefore(renderEsai(q), result));
+    }
+  });
+
+  updateStats();
+}
+
+function qHeaderHtml(q) {
+  const hotsBadge = q.hots ? '<span class="hots-badge">🔥 HOTS</span>' : '';
+  return `
+    <div class="q-top">
+      <div class="q-num" id="qn${q.n}">${q.n}</div>
+      <div class="q-text">
+        <span class="topic-tag ${q.tagCls}">${q.tag}</span>${hotsBadge}<br>
+        ${q.text}
+      </div>
+    </div>`;
+}
+
+function renderPG(q) {
+  const card = document.createElement('div');
+  card.className = 'q-card' + (q.hots ? ' hots-card' : '');
+  card.id = 'qc' + q.n;
+  const optsHtml = q.opts.map((o, i) => {
+    const lbl = ['A','B','C','D'][i];
+    return `<div class="option" onclick="answerPG(${q.n},'${lbl}')"><span class="opt-label">${lbl}</span><span class="opt-text">${o}</span></div>`;
+  }).join('');
+  card.innerHTML = qHeaderHtml(q) + `<div class="options">${optsHtml}</div><div class="explanation" id="exp${q.n}"></div>`;
+  return card;
+}
+
+function renderPGK(q) {
+  const card = document.createElement('div');
+  card.className = 'q-card' + (q.hots ? ' hots-card' : '');
+  card.id = 'qc' + q.n;
+  const optsHtml = q.opts.map((o, i) => {
+    const lbl = ['A','B','C','D','E'][i];
+    return `<div class="option" id="pgkopt${q.n}_${lbl}" onclick="togglePGK(${q.n},'${lbl}')"><span class="opt-label pgk-box">${lbl}</span><span class="opt-text">${o}</span></div>`;
+  }).join('');
+  card.innerHTML = qHeaderHtml(q) +
+    `<div class="options">${optsHtml}</div>
+     <div class="pgk-actions"><button class="btn-jawab" id="btnjawab${q.n}" onclick="submitPGK(${q.n})">Jawab</button></div>
+     <div class="explanation" id="exp${q.n}"></div>`;
+  return card;
+}
+
+function renderKat(q) {
+  const card = document.createElement('div');
+  card.className = 'q-card' + (q.hots ? ' hots-card' : '');
+  card.id = 'qc' + q.n;
+  const stmtHtml = q.statements.map((s, i) => {
+    const btns = q.labels.map(lbl =>
+      `<div class="kat-btn" id="katbtn${q.n}_${i}_${lbl.replace(/\s+/g,'')}" onclick="answerKat(${q.n},${i},'${lbl}')">${lbl}</div>`
+    ).join('');
+    return `<div class="kat-statement" id="katstmt${q.n}_${i}">
+              <div class="kat-statement-text"><strong>${i+1}.</strong> ${s.text}</div>
+              <div class="kat-toggle">${btns}</div>
+            </div>`;
+  }).join('');
+  card.innerHTML = qHeaderHtml(q) + `<div class="kat-list">${stmtHtml}</div><div class="explanation" id="exp${q.n}"></div>`;
+  return card;
+}
+
+function renderEsai(q) {
+  const card = document.createElement('div');
+  card.className = 'q-card';
+  card.id = 'qc' + q.n;
+  card.innerHTML = qHeaderHtml(q) +
+    `<textarea class="essay-textarea" id="essay${q.n}" placeholder="Tulis jawabanmu di sini..." oninput="onEssayInput(${q.n})"></textarea>
+     <div class="essay-note">✍️ Jawaban esai ini akan diperiksa dan dinilai langsung oleh gurumu, bukan otomatis.</div>`;
+  return card;
+}
+
+// ──────────────────────────────────────────────────────────────
+// TIMER
+// ──────────────────────────────────────────────────────────────
+function startTimer() {
+  timerInterval = setInterval(() => {
+    secondsLeft--;
+    const m = String(Math.floor(secondsLeft/60)).padStart(2,'0');
+    const s = String(secondsLeft%60).padStart(2,'0');
+    const el = document.getElementById('timerVal');
+    el.textContent = m + ':' + s;
+    if      (secondsLeft <= 60)  el.className = 'timer-val danger';
+    else if (secondsLeft <= 300) el.className = 'timer-val warn';
+    else                          el.className = 'timer-val';
+    if (secondsLeft <= 0) {
+      clearInterval(timerInterval);
+      if (!examDone) document.getElementById('timeModal').classList.add('show');
+    }
+  }, 1000);
+}
+
+function forceSubmit() {
+  document.getElementById('timeModal').classList.remove('show');
+  gradeAllAnswers();
+  showResult();
+}
+
+// ──────────────────────────────────────────────────────────────
+// HELPERS
+// ──────────────────────────────────────────────────────────────
+function findQuestion(qNum) {
+  for (const sec of currentPacketData.sections) {
+    for (const q of sec.pg)   if (q.n === qNum) return q;
+    for (const q of sec.pgk)  if (q.n === qNum) return q;
+    for (const q of sec.kat)  if (q.n === qNum) return q;
+    for (const q of sec.esai) if (q.n === qNum) return q;
+  }
+  return null;
+}
+
+function setQNumState(qNum, cls, label) {
+  const numEl = document.getElementById('qn' + qNum);
+  numEl.classList.remove('answered-correct','answered-wrong','answered-partial','answered-neutral');
+  numEl.classList.add(cls);
+  numEl.textContent = label;
+}
+
+function showExplanation(qNum, cls, label, text) {
+  const exp = document.getElementById('exp' + qNum);
+  exp.className = 'explanation show ' + cls;
+  exp.innerHTML = '<span class="exp-label">' + label + '</span>' + text;
+}
+
+// ──────────────────────────────────────────────────────────────
+// ANSWER: PG
+// ──────────────────────────────────────────────────────────────
+function answerPG(qNum, opt) {
+  if (state.map[qNum]) return;
+
+  state.map[qNum] = { type:'pg', opt: opt };
+  state.answeredQ++;
+
+  setQNumState(qNum, 'answered-neutral', '✓');
+
+  const card   = document.getElementById('qc' + qNum);
+  const opts   = card.querySelectorAll('.option');
+  const labels = ['A','B','C','D'];
+  opts.forEach((el, i) => {
+    el.onclick = null;
+    el.classList.add('locked');
+    if (labels[i] === opt) el.classList.add('selected');
+  });
+
+  afterAnswerUpdate();
+}
+
+// ──────────────────────────────────────────────────────────────
+// ANSWER: PGK (checkbox, konfirmasi via tombol Jawab)
+// ──────────────────────────────────────────────────────────────
+const pgkSelections = {};
+
+function togglePGK(qNum, lbl) {
+  if (state.map[qNum]) return; // sudah dikunci
+  if (!pgkSelections[qNum]) pgkSelections[qNum] = new Set();
+  const set = pgkSelections[qNum];
+  const el = document.getElementById('pgkopt' + qNum + '_' + lbl);
+  if (set.has(lbl)) { set.delete(lbl); el.classList.remove('selected'); }
+  else              { set.add(lbl);    el.classList.add('selected'); }
+}
+
+function submitPGK(qNum) {
+  if (state.map[qNum]) return;
+  const selected = pgkSelections[qNum] ? Array.from(pgkSelections[qNum]).sort() : [];
+  if (selected.length === 0) return; // minta pilih dulu
+
+  state.map[qNum] = { type:'pgk', opts: selected };
+  state.answeredQ++;
+
+  setQNumState(qNum, 'answered-neutral', '✓');
+
+  const card = document.getElementById('qc' + qNum);
+  const opts = card.querySelectorAll('.option');
+  opts.forEach((el) => {
+    el.onclick = null;
+    el.classList.add('locked');
+  });
+  const btn = document.getElementById('btnjawab' + qNum);
+  if (btn) { btn.disabled = true; btn.textContent = 'Terkunci'; }
+
+  afterAnswerUpdate();
+}
+
+// ──────────────────────────────────────────────────────────────
+// ANSWER: KATEGORI (Benar/Salah per pernyataan)
+// ──────────────────────────────────────────────────────────────
+function answerKat(qNum, idx, lbl) {
+  const q = findQuestion(qNum);
+  if (!state.map[qNum]) state.map[qNum] = { type:'kat', answers:{} };
+  const rec = state.map[qNum];
+  if (rec.answers[idx] !== undefined) return; // pernyataan ini sudah dijawab
+
+  rec.answers[idx] = lbl;
+
+  const safe = (s) => s.replace(/\s+/g,'');
+  q.labels.forEach(l => {
+    const el = document.getElementById('katbtn' + qNum + '_' + idx + '_' + safe(l));
+    el.onclick = null;
+    el.classList.add('locked');
+    if (l === lbl) el.classList.add('selected');
+  });
+
+  // Jika semua pernyataan pada soal ini sudah dijawab, tandai soal selesai (netral, belum dinilai)
+  const totalStmt = q.statements.length;
+  const answeredStmt = Object.keys(rec.answers).length;
+  if (answeredStmt === totalStmt) {
+    state.answeredQ++;
+    setQNumState(qNum, 'answered-neutral', '✓');
+    afterAnswerUpdate();
+  }
+}
+
+// ──────────────────────────────────────────────────────────────
+// KOREKSI — dijalankan sekali saat submit, mengungkap semua kunci
+// jawaban + skor sekaligus (tidak lagi per-klik)
+// ──────────────────────────────────────────────────────────────
+function gradeAllAnswers() {
+  const pk = currentPacketData;
+  const safe = (s) => s.replace(/\s+/g,'');
+
+  pk.sections.forEach(sec => {
+    sec.pg.forEach(q => {
+      const rec    = state.map[q.n];
+      const card   = document.getElementById('qc' + q.n);
+      const opts   = card.querySelectorAll('.option');
+      const labels = ['A','B','C','D'];
+
+      if (rec) {
+        const isCorrect = rec.opt === q.correct;
+        if (isCorrect) state.pointsEarned += 1; else state.pointsWrong += 1;
+        setQNumState(q.n, isCorrect ? 'answered-correct' : 'answered-wrong', isCorrect ? '✓' : '✗');
+        opts.forEach((el, i) => {
+          if (labels[i] === rec.opt && !isCorrect) el.classList.add('wrong');
+          if (labels[i] === q.correct)              el.classList.add(isCorrect ? 'correct' : 'show-correct');
+        });
+        showExplanation(q.n, isCorrect ? 'correct' : 'wrong', isCorrect ? '✓ Benar!' : '✗ Kurang tepat.', q.exp);
+      } else {
+        setQNumState(q.n, 'answered-wrong', '✗');
+        opts.forEach((el, i) => { if (labels[i] === q.correct) el.classList.add('show-correct'); });
+        showExplanation(q.n, 'wrong', '✗ Belum dijawab.', q.exp);
+      }
+    });
+
+    sec.pgk.forEach(q => {
+      const rec          = state.map[q.n];
+      const card         = document.getElementById('qc' + q.n);
+      const opts         = card.querySelectorAll('.option');
+      const labels       = ['A','B','C','D','E'];
+      const correctSorted = [...q.correct].sort();
+
+      if (rec) {
+        const selected = rec.opts;
+        const isFullyCorrect = selected.length === correctSorted.length &&
+                                selected.every((v,i) => v === correctSorted[i]);
+        if (isFullyCorrect) state.pointsEarned += 1; else state.pointsWrong += 1;
+        setQNumState(q.n, isFullyCorrect ? 'answered-correct' : 'answered-wrong', isFullyCorrect ? '✓' : '✗');
+        opts.forEach((el, i) => {
+          const lbl = labels[i];
+          if (!q.opts[i]) return;
+          const wasSelected = selected.includes(lbl);
+          const shouldBeSel = correctSorted.includes(lbl);
+          if (wasSelected && shouldBeSel)       el.classList.add('correct');
+          else if (wasSelected && !shouldBeSel) el.classList.add('wrong');
+          else if (!wasSelected && shouldBeSel) el.classList.add('show-correct');
+        });
+        showExplanation(q.n, isFullyCorrect ? 'correct' : 'wrong',
+          isFullyCorrect ? '✓ Benar Semua!' : '✗ Belum tepat.',
+          q.exp + ' <em>(Jawaban benar: ' + correctSorted.join(', ') + ')</em>');
+      } else {
+        setQNumState(q.n, 'answered-wrong', '✗');
+        opts.forEach((el, i) => { if (correctSorted.includes(labels[i])) el.classList.add('show-correct'); });
+        showExplanation(q.n, 'wrong', '✗ Belum dijawab.',
+          q.exp + ' <em>(Jawaban benar: ' + correctSorted.join(', ') + ')</em>');
+      }
+    });
+
+    sec.kat.forEach(q => {
+      if (!state.map[q.n]) state.map[q.n] = { type:'kat', answers:{} };
+      const rec = state.map[q.n];
+      const totalStmt = q.statements.length;
+      let correctCount = 0, answeredCount = 0;
+
+      q.statements.forEach((s, i) => {
+        const chosen   = rec.answers[i];
+        const answered = chosen !== undefined;
+        if (answered) {
+          answeredCount++;
+          const isCorrect = chosen === s.correct;
+          if (isCorrect) { correctCount++; state.pointsEarned += 1; } else { state.pointsWrong += 1; }
+          q.labels.forEach(l => {
+            const el = document.getElementById('katbtn' + q.n + '_' + i + '_' + safe(l));
+            if (l === chosen && !isCorrect) el.classList.add('wrong');
+            if (l === s.correct)            el.classList.add(isCorrect ? 'correct' : 'show-correct');
+          });
+        } else {
+          q.labels.forEach(l => {
+            const el = document.getElementById('katbtn' + q.n + '_' + i + '_' + safe(l));
+            if (l === s.correct) el.classList.add('show-correct');
+          });
+        }
+      });
+
+      let cls, label;
+      if (answeredCount === 0)                  { cls='answered-wrong';   label='✗'; }
+      else if (correctCount === totalStmt)      { cls='answered-correct'; label='✓'; }
+      else if (correctCount === 0)              { cls='answered-wrong';   label='✗'; }
+      else                                        { cls='answered-partial'; label=correctCount+'/'+totalStmt; }
+      setQNumState(q.n, cls, label);
+
+      const expCls = correctCount===totalStmt ? 'correct' : (correctCount===0 ? 'wrong' : 'partial');
+      const expLbl = correctCount===totalStmt ? '✓ Semua Benar!' : (correctCount===0 ? '✗ Semua Kurang Tepat.' : '± Sebagian Benar (' + correctCount + '/' + totalStmt + ').');
+      showExplanation(q.n, expCls, expLbl, 'Setiap pernyataan bernilai 1 poin.');
+    });
+  });
+
+  document.getElementById('headerStats').style.display = 'flex';
+  document.getElementById('hCorrect').textContent = state.pointsEarned;
+  document.getElementById('hWrong').textContent   = state.pointsWrong;
+}
+
+// ──────────────────────────────────────────────────────────────
+// ESAI (tidak memengaruhi skor, hanya disimpan)
+// ──────────────────────────────────────────────────────────────
+function onEssayInput(qNum) {
+  const val = document.getElementById('essay' + qNum).value;
+  const wasAnswered = !!(state.map[qNum] && state.map[qNum].text && state.map[qNum].text.trim());
+  state.map[qNum] = { type:'esai', text: val };
+  const isAnsweredNow = !!val.trim();
+  if (!wasAnswered && isAnsweredNow) {
+    state.answeredQ++;
+    setQNumState(qNum, 'answered-neutral', '✍️');
+  } else if (wasAnswered && !isAnsweredNow) {
+    state.answeredQ--;
+    const numEl = document.getElementById('qn' + qNum);
+    numEl.classList.remove('answered-neutral');
+    numEl.textContent = qNum;
+  }
+  updateStats();
+}
+
+// ──────────────────────────────────────────────────────────────
+// STATS & NAVIGASI
+// ──────────────────────────────────────────────────────────────
+function afterAnswerUpdate() {
+  updateStats();
+  if (state.answeredQ === state.totalQ) {
+    document.getElementById('finishBtn').style.display = 'inline-block';
+  }
+}
+
+function updateStats() {
+  document.getElementById('hCorrect').textContent    = state.pointsEarned;
+  document.getElementById('hWrong').textContent      = state.pointsWrong;
+  document.getElementById('navAnswered').textContent = state.answeredQ;
+  const pct = state.totalQ ? Math.round(state.answeredQ / state.totalQ * 100) : 0;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progLabel').textContent    = state.answeredQ + ' dari ' + state.totalQ + ' soal dijawab';
+  document.getElementById('progPct').textContent      = pct + '%';
+  if (state.answeredQ === state.totalQ) {
+    document.getElementById('finishBtn').style.display = 'inline-block';
+  }
+}
+
+function scrollToNext() {
+  const pk = currentPacketData;
+  for (const sec of pk.sections) {
+    const all = [...sec.pg, ...sec.pgk, ...sec.kat, ...sec.esai].sort((a,b)=>a.n-b.n);
+    for (const q of all) {
+      const done = q.type === undefined ? false : isQuestionDone(q);
+      if (!done) {
+        const el = document.getElementById('qc' + q.n);
+        if (el) { el.scrollIntoView({ behavior:'smooth', block:'center' }); return; }
+      }
+    }
+  }
+}
+
+function isQuestionDone(q) {
+  const rec = state.map[q.n];
+  if (!rec) return false;
+  if (rec.type === 'kat') {
+    return Object.keys(rec.answers).length === q.statements.length;
+  }
+  if (rec.type === 'esai') return !!(rec.text && rec.text.trim());
+  return true;
+}
+
+// ──────────────────────────────────────────────────────────────
+// MODAL KONFIRMASI SUBMIT
+// ──────────────────────────────────────────────────────────────
+function showConfirmModal() {
+  const pk = currentPacketData;
+  const unansweredLabels = [];
+  pk.sections.forEach(sec => {
+    [...sec.pg, ...sec.pgk, ...sec.kat, ...sec.esai].forEach(q => {
+      if (!isQuestionDone(q)) unansweredLabels.push(q.n);
+    });
+  });
+  unansweredLabels.sort((a,b)=>a-b);
+
+  document.getElementById('csTerjawab').textContent = state.answeredQ;
+  document.getElementById('csSkip').textContent      = unansweredLabels.length;
+
+  const warnEl = document.getElementById('unansweredWarning');
+  if (unansweredLabels.length > 0) {
+    const listStr = unansweredLabels.slice(0, 15).join(', ') + (unansweredLabels.length > 15 ? ', ...' : '');
+    warnEl.innerHTML = `<strong>⚠ Soal belum lengkap dijawab (${unansweredLabels.length} soal):</strong> No. ${listStr}`;
+    warnEl.style.display = 'block';
+  } else {
+    warnEl.style.display = 'none';
+  }
+
+  document.getElementById('confirmModal').classList.add('show');
+}
+
+function closeConfirmModal() {
+  document.getElementById('confirmModal').classList.remove('show');
+}
+
+function confirmSubmit() {
+  document.getElementById('confirmModal').classList.remove('show');
+  gradeAllAnswers();
+  showResult();
+}
+
+// ──────────────────────────────────────────────────────────────
+// RESULT
+// ──────────────────────────────────────────────────────────────
+function showResult() {
+  if (examDone) return;
+  examDone = true;
+  clearInterval(timerInterval);
+  sessionStorage.setItem(SS_DONE, '1');
+
+  const endTime  = new Date();
+  const duration = Math.round((endTime - startTime) / 60000);
+  const pct      = state.totalPoints ? Math.round(state.pointsEarned / state.totalPoints * 100) : 0;
+
+  document.getElementById('rCorrect').textContent      = state.pointsEarned;
+  document.getElementById('rWrong').textContent        = state.pointsWrong;
+  document.getElementById('rPct').textContent          = pct + '%';
+  document.getElementById('resultScore').textContent   = state.pointsEarned + '/' + state.totalPoints;
+  document.getElementById('studentResultInfo').textContent = '👤 ' + studentName + ' · Kelas ' + studentKelas;
+  document.getElementById('packetResultBadge').textContent = '📦 Paket ' + selectedPacket;
+  document.getElementById('durationBadge').textContent = '⏱ Durasi: ' + duration + ' menit';
+  document.getElementById('finishBtn').style.display   = 'none';
+
+  const pk = currentPacketData;
+  let essayTotal = 0, essayFilled = 0;
+  pk.sections.forEach(sec => sec.esai.forEach(q => {
+    essayTotal++;
+    const rec = state.map[q.n];
+    if (rec && rec.text && rec.text.trim()) essayFilled++;
+  }));
+  document.getElementById('essayCountNote').textContent = essayFilled + ' dari ' + essayTotal + ' jawaban esai';
+
+  let emoji='😊', label='';
+  if (pct>=90)      { emoji='🏆'; label='Luar biasa! Nilai sempurna!'; }
+  else if (pct>=75) { emoji='🎉'; label='Bagus sekali! Pertahankan prestasimu!'; }
+  else if (pct>=60) { emoji='👍'; label='Cukup baik, terus berlatih!'; }
+  else              { emoji='💪'; label='Jangan menyerah! Yuk pelajari lagi!'; }
+
+  document.getElementById('resultEmoji').textContent = emoji;
+  document.getElementById('resultLabel').textContent  = label;
+
+  // Susun rincian untuk WhatsApp
+  let pgDetail = '', pgkDetail = '', katDetail = '';
+  pk.sections.forEach(sec => {
+    sec.pg.forEach(q => {
+      const rec = state.map[q.n];
+      const jwb = rec ? rec.opt : '—';
+      const ok  = rec && rec.opt === q.correct;
+      pgDetail += `\n  No.${q.n}: Jawab ${jwb}${ok ? ' ✓' : ' ✗ (Kunci: ' + q.correct + ')'}`;
+    });
+    sec.pgk.forEach(q => {
+      const rec = state.map[q.n];
+      const jwb = rec ? rec.opts.join(',') : '—';
+      const ok  = rec && rec.opts.length === q.correct.length && [...q.correct].sort().every((v,i)=>v===[...rec.opts].sort()[i]);
+      pgkDetail += `\n  No.${q.n}: Jawab ${jwb}${ok ? ' ✓' : ' ✗ (Kunci: ' + [...q.correct].sort().join(',') + ')'}`;
+    });
+    sec.kat.forEach(q => {
+      const rec = state.map[q.n];
+      let correctCount = 0;
+      if (rec) q.statements.forEach((s,i) => { if (rec.answers[i] === s.correct) correctCount++; });
+      katDetail += `\n  No.${q.n}: ${correctCount}/${q.statements.length} pernyataan benar`;
+    });
+  });
+
+  let essayDetail = '';
+  pk.sections.forEach(sec => sec.esai.forEach(q => {
+    const rec = state.map[q.n];
+    const jwb = rec && rec.text && rec.text.trim() ? rec.text.trim() : '(tidak dijawab)';
+    essayDetail += `\n\n*No.${q.n} — ${q.tag}*\n${q.text}\n📝 Jawaban: ${jwb}`;
+  }));
+
+  const tanggal = endTime.toLocaleDateString('id-ID', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+  const jam     = endTime.toLocaleTimeString('id-ID', { hour:'2-digit', minute:'2-digit' });
+
+  let msg = `📊 *HASIL ULANGAN ILMU PENGETAHUAN SOSIAL*\n`;
+  msg += `🏫 SMP IT Insan Sejahtera\n`;
+  msg += `━━━━━━━━━━━━━━━━━━━\n`;
+  msg += `👤 *Nama:* ${studentName}\n`;
+  msg += `🏫 *Kelas:* ${studentKelas}\n`;
+  msg += `📦 *Paket Soal:* Paket ${selectedPacket}\n`;
+  msg += `📅 *Tanggal:* ${tanggal}\n`;
+  msg += `⏰ *Jam:* ${jam} (durasi ${duration} menit)\n`;
+  msg += `━━━━━━━━━━━━━━━━━━━\n`;
+  msg += `✅ *Poin Benar:* ${state.pointsEarned}\n`;
+  msg += `❌ *Poin Salah:* ${state.pointsWrong}\n`;
+  msg += `📝 *Dijawab:* ${state.answeredQ}/${state.totalQ} soal\n`;
+  msg += `🎯 *Nilai Sementara (PG+PGK+Berkategori):* *${pct}%* ${emoji}\n`;
+  msg += `_(Belum termasuk nilai esai — mohon diperiksa manual)_\n`;
+  msg += `━━━━━━━━━━━━━━━━━━━\n`;
+  msg += `*Rincian Pilihan Ganda:*${pgDetail}\n`;
+  msg += `━━━━━━━━━━━━━━━━━━━\n`;
+  msg += `*Rincian Pilihan Ganda Kompleks:*${pgkDetail}\n`;
+  msg += `━━━━━━━━━━━━━━━━━━━\n`;
+  msg += `*Rincian Soal Berkategori:*${katDetail}\n`;
+  msg += `━━━━━━━━━━━━━━━━━━━\n`;
+  msg += `📝 *JAWABAN ESAI (mohon diperiksa manual):*${essayDetail}\n`;
+  msg += `━━━━━━━━━━━━━━━━━━━\n`;
+  msg += `_Dikirim otomatis dari Ulangan Online ${EXAM_TITLE_JS} — Paket ${selectedPacket}_`;
+
+  document.getElementById('waBtn').href = 'https://wa.me/' + GURU_WA + '?text=' + encodeURIComponent(msg);
+
+  const panel = document.getElementById('resultPanel');
+  panel.classList.add('show');
+  setTimeout(() => panel.scrollIntoView({ behavior:'smooth', block:'start' }), 200);
+}
+
+function markSent() {
+  setTimeout(() => { document.getElementById('sentBadge').style.display = 'block'; }, 1000);
+}
+</script>
+</body>
+</html>
