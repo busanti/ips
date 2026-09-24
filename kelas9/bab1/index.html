@@ -432,6 +432,21 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); colo
   </div>
 </div>
 
+<!-- ══════════════════════════════════════════════ MODAL: TERDETEKSI PINDAH TAB/HALAMAN -->
+<div class="modal-overlay" id="tabSwitchModal">
+  <div class="modal-box">
+    <div class="modal-icon">🚨</div>
+    <div class="modal-title red">Terdeteksi Membuka Halaman/Tab Lain!</div>
+    <p class="modal-msg" style="text-align:center">Sistem mendeteksi kamu meninggalkan halaman ujian ini. Pelanggaran seperti ini <strong>tercatat otomatis</strong> dan akan dilaporkan ke guru bersama hasil ujianmu.</p>
+    <div class="confirm-stats" style="grid-template-columns:1fr">
+      <div class="cs-box"><div class="cs-val cs-red" id="csTabSwitch">0</div><div class="cs-lbl">🚨 Jumlah Pelanggaran</div></div>
+    </div>
+    <div class="modal-btns">
+      <button class="btn-modal btn-modal-danger" onclick="closeTabSwitchModal()">Saya Mengerti, Lanjutkan Ujian</button>
+    </div>
+  </div>
+</div>
+
 <!-- ══════════════════════════════════════════════ MODAL: KONFIRMASI SUBMIT -->
 <div class="modal-overlay" id="confirmModal">
   <div class="modal-box">
@@ -558,6 +573,7 @@ let studentName='', studentKelas='', selectedPacket='';
 let startTime=null, timerInterval=null, secondsLeft=DURATION;
 let examDone=false;
 let currentPacketData=null;
+let tabSwitchViolations=0;
 
 const SS_STARTED = 'ips9_bab1_started';
 const SS_DONE    = 'ips9_bab1_done';
@@ -592,6 +608,8 @@ function startExam() {
   if (!kelas) { document.getElementById('errKelas').style.display='block'; valid=false; }
   else          document.getElementById('errKelas').style.display='none';
   if (!valid) return;
+
+  unlockAlarmAudio();
 
   studentName  = nama;
   studentKelas = kelas;
@@ -650,6 +668,9 @@ function handleFullscreenExit() {
   const isFs = !!(document.fullscreenElement || document.webkitFullscreenElement);
   if (isFs) return;
   if (!startTime || examDone) return;
+  // Jangan hentikan ujian jika fullscreen keluar akibat pindah tab/halaman —
+  // kasus ini sudah ditangani terpisah oleh sistem alarm pindah tab.
+  if (document.hidden) return;
   if (document.getElementById('fsExitModal').classList.contains('show')) return;
   document.getElementById('fsExitModal').classList.add('show');
 }
@@ -663,6 +684,77 @@ function forceSubmitFsExit() {
 
 document.addEventListener('fullscreenchange', handleFullscreenExit);
 document.addEventListener('webkitfullscreenchange', handleFullscreenExit);
+
+// ──────────────────────────────────────────────────────────────
+// ALARM SAAT TERDETEKSI PINDAH TAB / MEMBUKA HALAMAN LAIN
+// ──────────────────────────────────────────────────────────────
+let alarmAudioCtx = null;
+
+function unlockAlarmAudio() {
+  try {
+    if (!alarmAudioCtx) {
+      const Ctx = window.AudioContext || window.webkitAudioContext;
+      alarmAudioCtx = new Ctx();
+    }
+    if (alarmAudioCtx.state === 'suspended') alarmAudioCtx.resume();
+    // Bunyikan nada nyaris tak terdengar untuk "membuka kunci" audio di browser
+    const osc = alarmAudioCtx.createOscillator();
+    const gain = alarmAudioCtx.createGain();
+    gain.gain.value = 0.00001;
+    osc.connect(gain); gain.connect(alarmAudioCtx.destination);
+    osc.start(); osc.stop(alarmAudioCtx.currentTime + 0.05);
+  } catch (e) { /* Web Audio tidak didukung — abaikan diam-diam */ }
+}
+
+function playAlarmSound() {
+  try {
+    if (!alarmAudioCtx) unlockAlarmAudio();
+    if (alarmAudioCtx.state === 'suspended') alarmAudioCtx.resume();
+
+    const ctx = alarmAudioCtx;
+    const beepTimes = [0, 0.35, 0.7]; // tiga bunyi beruntun
+    beepTimes.forEach(t => {
+      const osc  = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'square';
+      osc.frequency.value = 880;
+      gain.gain.setValueAtTime(0.0001, ctx.currentTime + t);
+      gain.gain.exponentialRampToValueAtTime(0.35, ctx.currentTime + t + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + t + 0.28);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(ctx.currentTime + t);
+      osc.stop(ctx.currentTime + t + 0.3);
+    });
+  } catch (e) { /* Web Audio tidak didukung — abaikan diam-diam */ }
+}
+
+function handleVisibilityChange() {
+  if (!document.hidden) return;              // hanya proses saat halaman disembunyikan
+  if (!startTime || examDone) return;         // ujian belum mulai / sudah selesai
+  if (document.getElementById('tabSwitchModal').classList.contains('show')) return;
+
+  tabSwitchViolations++;
+  playAlarmSound();
+}
+
+function closeTabSwitchModal() {
+  document.getElementById('tabSwitchModal').classList.remove('show');
+  // Klik tombol ini adalah gesture asli pengguna, jadi browser mengizinkan
+  // masuk kembali ke mode layar penuh secara otomatis di sini.
+  if (startTime && !examDone) enterFullscreen();
+}
+
+document.addEventListener('visibilitychange', () => {
+  handleVisibilityChange();
+  // Modal & pembaruan angka ditampilkan saat halaman terlihat kembali,
+  // supaya siswa pasti melihatnya (modal tak bisa dilihat saat tab tersembunyi).
+  if (!document.hidden && tabSwitchViolations > 0 && startTime && !examDone) {
+    document.getElementById('csTabSwitch').textContent = tabSwitchViolations;
+    document.getElementById('tabSwitchModal').classList.add('show');
+    playAlarmSound();
+  }
+});
 
 // ──────────────────────────────────────────────────────────────
 // RENDER
@@ -1238,6 +1330,9 @@ function showResult() {
   msg += `✅ *Poin Benar:* ${state.pointsEarned}\n`;
   msg += `❌ *Poin Salah:* ${state.pointsWrong}\n`;
   msg += `📝 *Dijawab:* ${state.answeredQ}/${state.totalQ} soal\n`;
+  if (tabSwitchViolations > 0) {
+    msg += `🚨 *Pelanggaran Pindah Tab/Halaman:* ${tabSwitchViolations} kali\n`;
+  }
   msg += `🎯 *Nilai Sementara (PG+PGK+Berkategori):* *${pct}%* ${emoji}\n`;
   msg += `_(Belum termasuk nilai esai — mohon diperiksa manual)_\n`;
   msg += `━━━━━━━━━━━━━━━━━━━\n`;
